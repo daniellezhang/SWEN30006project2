@@ -13,7 +13,7 @@ public class MyAutoController extends CarController{
 		private int wallSensitivity = 1;
 		
 		private boolean isFollowingWall = false; // This is set to true when the car starts sticking to a wall.
-		
+		private MoveHistory history;
 		private Sensor sensor;
 		// Car Speed to move at
 		private final int CAR_MAX_SPEED = 1;
@@ -22,6 +22,7 @@ public class MyAutoController extends CarController{
 			super(car);
 			alongWall = new MoveAlongWallStrategy(this.getPosition());
 			sensor  = new Sensor(car);
+			history = new MoveHistory();
 		}
 		
 		// Coordinate initialGuess;
@@ -31,6 +32,7 @@ public class MyAutoController extends CarController{
 			// Gets what the car can see
 			HashMap<Coordinate, MapTile> currentView = getView();
 			CarMove move = alongWall.decideMove(sensor);
+			history.addMove(move);
 			// checkStateChange();
 			if (move == CarMove.LEFT) {
 				this.turnLeft();

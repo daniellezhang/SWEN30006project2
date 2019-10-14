@@ -12,7 +12,7 @@ public interface CarStrategy {
 /*interface for strategy to decide the movement of the car*/
 	/*method to return string that correspond to the move of the car*/
 	int wallSensitivity = 1;
-	public CarMove decideMove(HashMap<Coordinate,MapTile> currentView, WorldSpatial.Direction orientation,String currentPosition);
+	public CarMove decideMove(Sensor sensor);
 	
 	public default boolean checkWallAhead(WorldSpatial.Direction orientation, HashMap<Coordinate, MapTile> currentView, Coordinate currentCoordinate){
 		switch(orientation){

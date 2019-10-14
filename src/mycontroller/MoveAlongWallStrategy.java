@@ -27,7 +27,11 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	}
 	
 	@Override
-	public CarMove decideMove(HashMap<Coordinate, MapTile> currentView, WorldSpatial.Direction orientation,String currentPosition) {
+	public CarMove decideMove(Sensor sensor) {
+		//HashMap<Coordinate, MapTile> currentView, WorldSpatial.Direction orientation,String currentPosition
+		HashMap<Coordinate, MapTile> currentView = sensor.getView();
+		WorldSpatial.Direction orientation = sensor.getOrientation();
+		String currentPosition = sensor.getPosition();
 		this.currentCoordinate = new Coordinate(currentPosition);
 		if (isFollowingWall) {
 			// If wall no longer on left, turn left

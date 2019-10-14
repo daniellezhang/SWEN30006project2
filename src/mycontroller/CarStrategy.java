@@ -1,6 +1,7 @@
 package mycontroller;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -89,5 +90,33 @@ public interface CarStrategy {
 			}
 		}
 		return false;
+	}
+
+	public default world.WorldSpatial.Direction clockwise(world.WorldSpatial.Direction orientation){
+		//return the next direction for the given orientation in clockwise order
+		if (orientation == world.WorldSpatial.Direction.NORTH) {
+		return world.WorldSpatial.Direction.EAST;
+		}
+		if (orientation == world.WorldSpatial.Direction.EAST) {
+			return world.WorldSpatial.Direction.SOUTH;
+		}
+		if(orientation == world.WorldSpatial.Direction.EAST) {
+			return world.WorldSpatial.Direction.WEST;
+		}
+		return world.WorldSpatial.Direction.NORTH;
+	}
+	
+	public default world.WorldSpatial.Direction anticlockwise(world.WorldSpatial.Direction orientation){
+		//return the next direction for the given orientation in clockwise order
+		if (orientation == world.WorldSpatial.Direction.NORTH) {
+		return world.WorldSpatial.Direction.WEST;
+		}
+		if (orientation == world.WorldSpatial.Direction.WEST) {
+			return world.WorldSpatial.Direction.SOUTH;
+		}
+		if(orientation == world.WorldSpatial.Direction.SOUTH) {
+			return world.WorldSpatial.Direction.EAST;
+		}
+		return world.WorldSpatial.Direction.NORTH;
 	}
 }

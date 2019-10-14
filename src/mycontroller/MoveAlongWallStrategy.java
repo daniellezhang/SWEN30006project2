@@ -44,10 +44,12 @@ public class MoveAlongWallStrategy implements CarStrategy {
 			if(checkWallAhead(orientation,currentView, currentCoordinate)) {
 				isFollowingWall = true;
 				//check whether there is wall on the left or right
-				if(!checkWallAhead(clockwise(orientation),currentView,currentCoordinate)) {
+				world.WorldSpatial.Direction right = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.RIGHT);
+				world.WorldSpatial.Direction left = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT);
+				if(!checkWallAhead(right,currentView, currentCoordinate)) {
 					return CarMove.RIGHT;
 				}
-				if(!checkWallAhead(anticlockwise(orientation),currentView,currentCoordinate)) {
+				if(!checkWallAhead(left,currentView,currentCoordinate)) {
 					return CarMove.LEFT;
 					}
 					

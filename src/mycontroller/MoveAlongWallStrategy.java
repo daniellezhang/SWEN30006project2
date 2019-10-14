@@ -1,6 +1,8 @@
 package mycontroller;
 
 import java.util.HashMap;
+import java.util.Random;
+
 import exceptions.UnsupportedModeException;
 import swen30006.driving.Simulation;
 import tiles.MapTile;
@@ -16,10 +18,12 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	private int wallSensitivity = 1;
 	private boolean isFollowingWall;
 	private Coordinate currentCoordinate;
+	private Random rand;
 	
 	public MoveAlongWallStrategy(String currentPosition) {
 		isFollowingWall = false;
 		this.currentCoordinate = new Coordinate(currentPosition);
+		rand = new Random();
 	}
 	
 	@Override
@@ -39,7 +43,17 @@ public class MoveAlongWallStrategy implements CarStrategy {
 			// Start wall-following (with wall on left) as soon as we see a wall straight ahead
 			if(checkWallAhead(orientation,currentView, currentCoordinate)) {
 				isFollowingWall = true;
-				return CarMove.RIGHT;
+				//check whether there is wall on the left or right
+				if(!checkWallAhead(clockwise(orientation),currentView,currentCoordinate)) {
+					return CarMove.RIGHT;
+				}
+				if(!checkWallAhead(anticlockwise(orientation),currentView,currentCoordinate)) {
+					return CarMove.LEFT;
+					}
+					
+				
+				//wall on both side. brake and reverse 
+				return CarMove.BACKWARD;
 			}
 		}
 		return CarMove.FORWARD;

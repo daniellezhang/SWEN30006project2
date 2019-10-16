@@ -17,10 +17,10 @@ public class MyAutoController extends CarController{
 		private Sensor sensor;
 		// Car Speed to move at
 		private final int CAR_MAX_SPEED = 1;
-		private CarStrategy alongWall;
+		private CarStrategy strategy;
 		public MyAutoController(Car car) {
 			super(car);
-			alongWall = new MoveAlongWallStrategy(this.getPosition());
+			strategy = new ExploreStrategy();
 			sensor  = new Sensor(car);
 			history = new MoveHistory();
 		}
@@ -30,8 +30,10 @@ public class MyAutoController extends CarController{
 		@Override
 		public void update() {
 			// Gets what the car can see
-			HashMap<Coordinate, MapTile> currentView = getView();
-			CarMove move = alongWall.decideMove(sensor);
+			HashMap<Coordinate, MapTile> currentView = sensor.getView();
+			
+			CarMove move = strategy.decideMove(sensor);
+			MemoryMap.getMemoryMap().updateMap(currentView);
 			history.addMove(move);
 			// checkStateChange();
 			if (move == CarMove.LEFT) {

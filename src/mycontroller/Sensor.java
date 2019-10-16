@@ -20,6 +20,9 @@ public class Sensor {
 	public String getPosition() {
 		return car.getPosition();
 	}
+	public Coordinate getCoordinate() {
+		return (new Coordinate(car.getPosition()));
+	}
 	
 	public float getHealth() {
 		return car.getHealth();

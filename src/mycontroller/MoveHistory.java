@@ -14,6 +14,14 @@ public class MoveHistory {
 		this.moves.add(m);
 	}
 	
+	//look up the ith last move of the car
+	public CarMove getLastMove(int i) {
+		int index = moves.size()-i;
+		if(index >= 0) {
+			return moves.get(index);
+		}
+		return null;
+	}
 	
 
 }

@@ -1,5 +1,7 @@
 package mycontroller;
 
-public class TileStatus {
-
+public enum TileStatus {
+	UNKONW,
+	REACHABLE,
+	UNREACHABLE;
 }

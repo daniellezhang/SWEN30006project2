@@ -11,12 +11,14 @@ import world.WorldSpatial;
 public class ExploreStrategy implements CarStrategy {
 	private Random rand;
 	private Coordinate currentCoordinate;
-	private boolean isFollowingWall;
-	
+	private String name = "explore";
 	public ExploreStrategy() {
 		rand = new Random();
-		isFollowingWall = false;
 		
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	@Override

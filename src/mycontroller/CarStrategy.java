@@ -1,8 +1,6 @@
 package mycontroller;
 
 import java.util.HashMap;
-import java.util.ArrayList;
-
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.WorldSpatial;
@@ -13,6 +11,8 @@ public interface CarStrategy {
 	/*method to return string that correspond to the move of the car*/
 	int wallSensitivity = 1;
 	public CarMove decideMove(Sensor sensor);
+	
+	public String getName();
 	
 	public default boolean checkWallAhead(WorldSpatial.Direction orientation, HashMap<Coordinate, MapTile> currentView, Coordinate currentCoordinate){
 		switch(orientation){

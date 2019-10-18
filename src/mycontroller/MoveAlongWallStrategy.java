@@ -28,6 +28,9 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	
 	@Override
 	public CarMove decideMove(Sensor sensor) {
+		
+		System.out.println("Hello" + sensor.getView());
+
 		//HashMap<Coordinate, MapTile> currentView, WorldSpatial.Direction orientation,String currentPosition
 		HashMap<Coordinate, MapTile> currentView = sensor.getView();
 		WorldSpatial.Direction orientation = sensor.getOrientation();

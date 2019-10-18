@@ -21,6 +21,7 @@ public class ExploreStrategy implements CarStrategy {
 	
 	@Override
 	public CarMove decideMove(Sensor sensor) {
+		
 		//get the sensor's detection    
 		HashMap<Coordinate,MapTile> currentView = sensor.getView();
 		this.currentCoordinate = sensor.getCoordinate();

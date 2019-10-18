@@ -19,11 +19,17 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	private boolean isFollowingWall;
 	private Coordinate currentCoordinate;
 	private Random rand;
+	private String name = "move_along_wall";
+
 	
 	public MoveAlongWallStrategy(String currentPosition) {
 		isFollowingWall = false;
 		this.currentCoordinate = new Coordinate(currentPosition);
 		rand = new Random();
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	@Override

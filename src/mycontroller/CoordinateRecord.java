@@ -3,18 +3,19 @@ package mycontroller;
 import tiles.MapTile;
 
 public class CoordinateRecord {
-	private TileStatus reachable;
+	
+	private boolean reachable;
 	private MapTile tile;
 	
 	public CoordinateRecord(MapTile tile) {
 		this.tile = tile;
-		this.reachable = TileStatus.UNKONW;
+		this.reachable = true;
 	}
 	
-	public void setUnreachable(TileStatus status) {
-		this.reachable = status;
+	public void setUnreachable() {
+		this.reachable = false;
 	}
-	public TileStatus getReachable() {
+	public boolean getReachable() {
 		return this.reachable;
 	}
 }

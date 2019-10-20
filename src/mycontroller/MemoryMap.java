@@ -1,6 +1,8 @@
 package mycontroller;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import utilities.Coordinate;
 import tiles.*;
 import world.World;
@@ -40,14 +42,23 @@ public class MemoryMap implements Observer{
 	
 	@Override
 	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
+		
+		Graph g = new Graph(this);
+		g.BFS();
+		
 		for(Coordinate key: currentView.keySet()) {
+			
 			CoordinateRecord cr = new CoordinateRecord(currentView.get(key));
 			
 			//
 			// check whether it already exists in our record
 			//
 			
-			record.put(key, cr);
+			if (!record.containsKey(key)) {
+				record.put(key, cr);
+			}
+			
+			
 		}
 	}
 	

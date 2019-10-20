@@ -1,6 +1,7 @@
 package mycontroller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -72,7 +73,7 @@ public class Graph {
 			
 			// get possible neighbours for that node
 			ArrayList<Coordinate> possibleNeighbours = m.getNeighbour(c);
-			
+						
 			for (Coordinate possibleNeighbour: possibleNeighbours) {
 				
 				// if a possible neighbour is indeed in the memory map:
@@ -83,6 +84,7 @@ public class Graph {
 					Node v = new Node(possibleNeighbour,testCR);
 					
 					addEdge(u,v);
+					
 					
 				}
 				
@@ -100,13 +102,76 @@ public class Graph {
 		
 	}
 	
-	public void BFS(Node source) {
+	// implemented from CLRS pseudocode
+	
+	public void BFS() {
+
 		
+		ArrayList<Node> possibleSources = new ArrayList<Node>(adj.keySet());
 		
+		if (possibleSources.size() < 3) {
+			return;
+		}
 		
-		LinkedList<Node> q = new LinkedList<Node>();
+		Node source = possibleSources.get(0);
 		
-		
+				
+		HashMap<Node,String> color = new HashMap<Node,String>();
+		HashMap<Node,Node> pred = new HashMap<Node,Node>();
+		HashMap<Node,Integer> dist = new HashMap<Node,Integer>();
+		LinkedList<Node> queue = new LinkedList<Node>();
+	
+		// set all nodes to unvisited (white)
+		for (Node u : adj.keySet()) {
+			color.put(u,"white");
+		}
+		 
+		// set the source to visited (black)
+		 color.put(source,"black");
+		 
+		 // predecessor is null
+		 pred.put(source,null);
+		 
+		 // distance is 0
+		 dist.put(source,0);
+		 
+		 // enqueue source
+		 queue.add(source);
+		 
+		 while (queue.size() != 0) {
+			 			 
+			 // dequeue
+			 Node u = queue.poll();
+			 Integer distU = dist.get(u);
+			 
+			 ArrayList<Node> neighbours = adj.get(u);
+
+			 
+			 if (neighbours == null) {
+				 continue;
+			 }
+					 
+			 for (Node v : neighbours) {
+				 
+				 // check if it's unvisited
+				 if (color.get(v) == "white") {
+					 
+					 
+					 color.put(v,"black");
+					 dist.put(v,distU+1);
+					 pred.put(v,u);
+					 
+					 queue.add(v);
+				 
+				 }
+				 
+				 
+			 }
+			 
+		 }
+		 
+		 System.out.println(Arrays.asList(pred));
+		 
 		
 	}
 	

@@ -28,6 +28,11 @@ public class MyAutoController extends CarController implements Subject{
 			strategy = new ExploreStrategy();
 			sensor  = new Sensor(car);
 			history = new MoveHistory();
+			
+			this.observers = new ArrayList<Observer>();
+			
+			addObserver(MemoryMap.getMemoryMap());
+			
 		}
 		
 		// Coordinate initialGuess;
@@ -40,8 +45,8 @@ public class MyAutoController extends CarController implements Subject{
 			CarMove move = strategy.decideMove(sensor);
 			//MemoryMap.getMemoryMap().updateMap(currentView);
 			//history.addMove(move);
-			//publishEvent(currentView,move);
-			
+			publishEvent(currentView,move);
+
 			// checkStateChange();
 			if (move == CarMove.LEFT) {
 				this.turnLeft();
@@ -72,9 +77,11 @@ public class MyAutoController extends CarController implements Subject{
 
 		@Override
 		public void publishEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
+		
 			for(Observer observer: this.observers) {
 				observer.respondEvent(currentView,move);
 			}
+		
 		}
 	
 		

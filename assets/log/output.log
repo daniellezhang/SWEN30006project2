@@ -1,8 +1,8 @@
-2019-10-20 23:20:41 INFO  Car - Speed:   0.0; Angle:   EAST; Position:   2,3; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 1000.0; Tile: START
-2019-10-20 23:20:41 INFO  Car - Speed:   1.0; Angle:   EAST; Position:   3,3; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 999.0; Tile: ROAD
-2019-10-20 23:20:41 INFO  Car - Speed:   1.0; Angle:   EAST; Position:   4,3; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 998.0; Tile: ROAD
-2019-10-20 23:20:41 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,4; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 997.0; Tile: ROAD
-2019-10-20 23:20:42 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,5; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 996.0; Tile: ROAD
-2019-10-20 23:20:42 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,6; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 995.0; Tile: ROAD
-2019-10-20 23:20:42 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,7; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 994.0; Tile: ROAD
-2019-10-20 23:20:42 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,8; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 993.0; Tile: ROAD
+2019-10-21 01:45:48 INFO  Car - Speed:   0.0; Angle:   EAST; Position:   2,3; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 1000.0; Tile: START
+2019-10-21 01:45:48 INFO  Car - Speed:   1.0; Angle:   EAST; Position:   3,3; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 999.0; Tile: ROAD
+2019-10-21 01:45:49 INFO  Car - Speed:   1.0; Angle:   EAST; Position:   4,3; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 998.0; Tile: ROAD
+2019-10-21 01:45:49 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,4; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 997.0; Tile: ROAD
+2019-10-21 01:45:49 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,5; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 996.0; Tile: ROAD
+2019-10-21 01:45:49 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,6; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 995.0; Tile: ROAD
+2019-10-21 01:45:50 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,7; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 994.0; Tile: ROAD
+2019-10-21 01:45:50 INFO  Car - Speed:   1.0; Angle:  NORTH; Position:   4,8; Parcels:      0; Health: 200.0; Health Usage: 200.0; Fuel: 993.0; Tile: ROAD

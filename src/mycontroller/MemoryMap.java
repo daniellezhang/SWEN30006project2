@@ -5,7 +5,7 @@ import utilities.Coordinate;
 import tiles.*;
 import world.World;
 
-public class MemoryMap {
+public class MemoryMap implements Observer{
 /*a class to record information about all the tiles that the car has detected*/
 	private HashMap<Coordinate,CoordinateRecord> record;
 	private static MemoryMap map = null;
@@ -21,11 +21,26 @@ public class MemoryMap {
 		return map;
 	}
 	
-	/*update the coordinate record with the current view from the car*/
-	public void updateMap(HashMap<Coordinate, MapTile> currentView) {
-		
+//	/*update the coordinate record with the current view from the car*/
+//	public void updateMap(HashMap<Coordinate, MapTile> currentView) {
+//		
+//		for(Coordinate key: currentView.keySet()) {
+//			
+//			CoordinateRecord cr = new CoordinateRecord(currentView.get(key));
+//			
+//			//
+//			// check whether it already exists in our record
+//			//
+//			
+//			record.put(key, cr);
+//			
+//		}
+//		
+//	}
+	
+	@Override
+	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
 		for(Coordinate key: currentView.keySet()) {
-			
 			CoordinateRecord cr = new CoordinateRecord(currentView.get(key));
 			
 			//
@@ -33,9 +48,7 @@ public class MemoryMap {
 			//
 			
 			record.put(key, cr);
-			
 		}
-		
 	}
 	
 	public CoordinateRecord getCoordinateRecord(Coordinate coord) {

@@ -1,7 +1,11 @@
 package mycontroller;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class MoveHistory {
+import tiles.MapTile;
+import utilities.Coordinate;
+
+public class MoveHistory implements Observer{
 	
 	private ArrayList<CarMove> moves;
 	
@@ -10,8 +14,13 @@ public class MoveHistory {
 		this.moves = new ArrayList<CarMove>();
 	}
 	
-	public void addMove(CarMove m) {
-		this.moves.add(m);
+//	public void addMove(CarMove m) {
+//		this.moves.add(m);
+//	}
+	
+	@Override
+	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
+		this.moves.add(move);
 	}
 	
 	//look up the ith last move of the car

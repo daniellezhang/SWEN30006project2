@@ -40,7 +40,7 @@ public class MyAutoController extends CarController implements Subject{
 			CarMove move = strategy.decideMove(sensor);
 			//MemoryMap.getMemoryMap().updateMap(currentView);
 			//history.addMove(move);
-			publishEvent(currentView,move);
+			//publishEvent(currentView,move);
 			
 			// checkStateChange();
 			if (move == CarMove.LEFT) {

@@ -4,12 +4,12 @@ import tiles.MapTile;
 
 public class CoordinateRecord {
 	
-	private boolean reachable;
+	private TileStatus reachable;
 	private MapTile tile;
 	private boolean isVisited;
 	public CoordinateRecord(MapTile tile) {
 		this.tile = tile;
-		this.reachable = true;
+		this.reachable = TileStatus.UNKNOW;
 		this.isVisited = false;
 	}
 	
@@ -21,10 +21,10 @@ public class CoordinateRecord {
 		return this.isVisited;
 	}
 	
-	public void setUnreachable() {
-		this.reachable = false;
+	public void setReachable(TileStatus status) {
+		this.reachable = status;
 	}
-	public boolean getReachable() {
+	public TileStatus getReachable() {
 		return this.reachable;
 	}
 }

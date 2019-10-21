@@ -46,6 +46,8 @@ public class MyAutoController extends CarController implements Subject{
 			//MemoryMap.getMemoryMap().updateMap(currentView);
 			//history.addMove(move);
 			publishEvent(currentView,move);
+			//the coordinate the vehicle is currently on has been visited. update it in MemoryMap
+			MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).setIsVisited(true);
 
 			// checkStateChange();
 			if (move == CarMove.LEFT) {

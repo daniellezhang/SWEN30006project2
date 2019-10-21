@@ -43,7 +43,23 @@ public interface CarStrategy {
 			return false;
 		}	
 	}
-	
+	//give the coordinate that is adjacent to the current coordinate that is in the given orientation
+	public default Coordinate getNeighbourCoordinate(WorldSpatial.Direction neighbourOrientation, Coordinate currentCoordinate) {
+		
+		switch(neighbourOrientation){
+		case EAST:
+			return eastNeighbour(currentCoordinate);
+		case NORTH:
+			return northNeighbour(currentCoordinate);
+		case SOUTH:
+			return southNeighbour(currentCoordinate);
+		case WEST:
+			return westNeighbour(currentCoordinate);
+		default:
+			return null;
+		}	
+	}
+		
 	
 	
 	public default boolean checkEast(HashMap<Coordinate, MapTile> currentView, Coordinate currentCoordinate){
@@ -56,6 +72,7 @@ public interface CarStrategy {
 		}
 		return false;
 	}
+	
 	
 	public default boolean checkWest(HashMap<Coordinate,MapTile> currentView, Coordinate currentCoordinate){
 		// Check tiles to my left
@@ -91,6 +108,23 @@ public interface CarStrategy {
 		}
 		return false;
 	}
+	
+	//return the adjacent coordinate in East direction
+	public default Coordinate eastNeighbour(Coordinate currentCoordinate) {
+		return new Coordinate(currentCoordinate.x+1, currentCoordinate.y);
+	}
 
+	//return the adjacent coordinate in West direction
+	public default Coordinate westNeighbour(Coordinate currentCoordinate) {
+		return new Coordinate(currentCoordinate.x-1, currentCoordinate.y);
+	}	
+	//return the adjacent coordinate in North direction
+	public default Coordinate northNeighbour(Coordinate currentCoordinate) {
+		return new Coordinate(currentCoordinate.x, currentCoordinate.y+1);
+	}
 
+	//return the adjacent coordinate in South direction
+	public default Coordinate southNeighbour(Coordinate currentCoordinate) {
+		return new Coordinate(currentCoordinate.x, currentCoordinate.y-1);
+	}	
 }

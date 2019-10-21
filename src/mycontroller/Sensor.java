@@ -44,5 +44,16 @@ public class Sensor {
 	public MemoryMap update(MemoryMap m) {
 		return null;
 	}
-
+	
+	public int getNumParcels() {
+		return car.numParcelsFound();
+	}
+	
+	public int getTargetParcels() {
+		return car.targetParcels;
+	}
+	
+	public boolean enoughParcels() {
+		return this.getNumParcels() >= this.getTargetParcels();
+	}
 }

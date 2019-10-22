@@ -1,7 +1,7 @@
 package mycontroller;
 
 public enum TileStatus {
-	UNKNOW,
+	UNKONW,
 	REACHABLE,
 	UNREACHABLE;
 }

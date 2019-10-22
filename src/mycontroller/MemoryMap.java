@@ -11,8 +11,11 @@ public class MemoryMap implements Observer{
 /*a class to record information about all the tiles that the car has detected*/
 	private HashMap<Coordinate,CoordinateRecord> record;
 	private static MemoryMap map = null;
+	private Coordinate start;
+	private ArrayList<Coordinate> finish;
 	private MemoryMap(){
 		record = new HashMap<Coordinate,CoordinateRecord>();
+		finish = new ArrayList<Coordinate>();
 	}
 	
 	/*getter for the singleton object*/
@@ -56,6 +59,14 @@ public class MemoryMap implements Observer{
 			
 			if (!record.containsKey(key)) {
 				record.put(key, cr);
+				//check whether the coordinate is a start tile
+				if (currentView.get(key).getType() == MapTile.Type.START) {
+					start = key;
+				}
+				//check whether the coordinate is a finish tile
+				if (currentView.get(key).getType() == MapTile.Type.FINISH) {
+					finish.add(key);
+				}
 			}
 			
 			
@@ -97,6 +108,14 @@ public class MemoryMap implements Observer{
 		}
 		
 		return neighbours;
+	}
+	
+	public Coordinate getStart() {
+		return start;
+	}
+	
+	public ArrayList<Coordinate> getFinish(){
+		return finish;
 	}
 
 }

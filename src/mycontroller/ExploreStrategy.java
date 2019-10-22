@@ -12,6 +12,7 @@ public class ExploreStrategy implements CarStrategy {
 	private Random rand;
 	private Coordinate currentCoordinate;
 	private String name = "explore";
+	
 	public ExploreStrategy() {
 		rand = new Random();
 		
@@ -28,16 +29,21 @@ public class ExploreStrategy implements CarStrategy {
 		HashMap<Coordinate,MapTile> currentView = sensor.getView();
 		this.currentCoordinate = sensor.getCoordinate();
 		WorldSpatial.Direction orientation = sensor.getOrientation();
-		ArrayList<CarMove> possibleMove = new ArrayList<CarMove>();
-		
+		HashMap<CarMove,Coordinate> possibleMove =new HashMap<CarMove,Coordinate>();
+		HashMap<CarMove,Coordinate> unvisited =new HashMap<CarMove,Coordinate>();
+		//the carMove command that will let the vehicle continue to travel straight
+		CarMove goStraight = null;
 		//the car isn't moving, decide whether to accelerate forward or backward
 		if(sensor.getVelocity()==0) {
 			//no wall ahead, can accelerate
 			if(!checkWallAhead(orientation, currentView, currentCoordinate)) {
-				possibleMove.add(CarMove.FORWARD);
+				Coordinate neighbour = getNeighbourCoordinate(orientation, currentCoordinate);
+				possibleMove.put(CarMove.FORWARD,neighbour);
 			}
 			if(!checkWallAhead(WorldSpatial.reverseDirection(orientation),currentView,currentCoordinate)) {
-				possibleMove.add(CarMove.BACKWARD);
+				WorldSpatial.Direction reverse = WorldSpatial.reverseDirection(orientation);
+				Coordinate neighbour = getNeighbourCoordinate(reverse, currentCoordinate);
+				possibleMove.put(CarMove.BACKWARD,neighbour);
 			}
 		}
 		//the car is moving
@@ -46,35 +52,41 @@ public class ExploreStrategy implements CarStrategy {
 			if(sensor.getVelocity()>0) {
 				//no wall head, can accelerate. prioritise driving straight
 				if(!checkWallAhead(orientation, currentView, currentCoordinate)) {
-					possibleMove.add(CarMove.FORWARD);
-					return CarMove.FORWARD;
+					possibleMove.put(CarMove.FORWARD, getNeighbourCoordinate(orientation, currentCoordinate));
+					goStraight = CarMove.FORWARD;
 				}
 				//no wall on the left, can turn left
 				if(!checkWallAhead(WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT),
 						currentView, currentCoordinate)) {
-					possibleMove.add(CarMove.LEFT);
+					WorldSpatial.Direction left = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT);
+					possibleMove.put(CarMove.LEFT, getNeighbourCoordinate(left, currentCoordinate));
 				}
 				//no wall on the right, can turn right
 				if(!checkWallAhead(WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.RIGHT),
 						currentView, currentCoordinate)) {
-					possibleMove.add(CarMove.RIGHT);
+					WorldSpatial.Direction right = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.RIGHT);
+					possibleMove.put(CarMove.RIGHT, getNeighbourCoordinate(right, currentCoordinate));
 				}
 			}
 			//the car is moving backward. check if there is wall on the back
 			else {
 				if(!checkWallAhead(WorldSpatial.reverseDirection(orientation),currentView,currentCoordinate)) {
-					return CarMove.BACKWARD;
+					WorldSpatial.Direction reverse = WorldSpatial.reverseDirection(orientation);
+					possibleMove.put(CarMove.BACKWARD, getNeighbourCoordinate(reverse, currentCoordinate));
+					goStraight = CarMove.BACKWARD;
 				}
 				else {
 					orientation = WorldSpatial.reverseDirection(orientation);
 					if(!checkWallAhead(WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT),
 							currentView, currentCoordinate)) {
-						possibleMove.add(CarMove.LEFT);
+						WorldSpatial.Direction left = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT);
+						possibleMove.put(CarMove.LEFT, getNeighbourCoordinate(left, currentCoordinate));
 					}
 					//no wall on the right, can turn right
 					if(!checkWallAhead(WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.RIGHT),
 							currentView, currentCoordinate)) {
-						possibleMove.add(CarMove.RIGHT);
+						WorldSpatial.Direction right = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.RIGHT);
+						possibleMove.put(CarMove.RIGHT, getNeighbourCoordinate(right, currentCoordinate));
 					}
 				}
 				
@@ -86,9 +98,42 @@ public class ExploreStrategy implements CarStrategy {
 				return CarMove.BRAKE;
 			}
 		}
-		//choose a random move from the list of possible moves
-		int i = rand.nextInt(possibleMove.size());
-		return possibleMove.get(i);
+		
+		//get a list of moves that leads to unvisited coordinate
+		for(CarMove move:possibleMove.keySet()) {
+			Coordinate neighbour = possibleMove.get(move);
+			CoordinateRecord neighbourRecord = MemoryMap.getMemoryMap().getCoordinateRecord(neighbour);
+			if(neighbourRecord == null || ! neighbourRecord.getIsVisited()) {
+				unvisited.put(move,neighbour);
+				break;
+			}
+			for(Coordinate nextNeighbour: MemoryMap.getMemoryMap().getNeighbour(neighbour)) {
+				neighbourRecord = MemoryMap.getMemoryMap().getCoordinateRecord(nextNeighbour) ;
+				if(neighbourRecord == null || ! neighbourRecord.getIsVisited()) {
+					unvisited.put(move,neighbour);
+					break;
+				}
+			}
+		}		
+		
+		//if going straight go to a coordinate that hasn't been visited, keep going straight
+		if(goStraight != null) {
+			if(unvisited.getOrDefault(goStraight, null) != null) {
+				return goStraight;
+			}
+		}
+		
+		if(unvisited.size() > 0) {
+			int index = rand.nextInt(unvisited.size());
+			ArrayList<CarMove> unvisitedMove = new ArrayList(unvisited.keySet());
+			return unvisitedMove.get(index);
+		}
+		else if(possibleMove.size() > 0){
+			int index = rand.nextInt(possibleMove.size());
+			ArrayList<CarMove> possibleMoveList = new ArrayList(possibleMove.keySet());
+			return possibleMoveList.get(index);
+		}
+		return CarMove.BRAKE;
+		
 	}
-
 }

@@ -32,13 +32,13 @@ public interface CarStrategy {
 		
 		switch(orientation){
 		case EAST:
-			return checkNorth(currentView, currentCoordinate);
+			return (checkNorth(currentView, currentCoordinate)||checkSouth(currentView, currentCoordinate));
 		case NORTH:
-			return checkWest(currentView, currentCoordinate);
+			return (checkWest(currentView, currentCoordinate)||checkEast(currentView, currentCoordinate));
 		case SOUTH:
-			return checkEast(currentView, currentCoordinate);
+			return (checkWest(currentView, currentCoordinate)||checkEast(currentView, currentCoordinate));
 		case WEST:
-			return checkSouth(currentView, currentCoordinate);
+			return (checkNorth(currentView, currentCoordinate)||checkSouth(currentView, currentCoordinate));
 		default:
 			return false;
 		}	

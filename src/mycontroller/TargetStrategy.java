@@ -22,29 +22,30 @@ public class TargetStrategy implements CarStrategy {
 
 	public CarMove decideMove(Sensor sensor) {
 
-		// create a new graph at every move
-		Graph g = new Graph(MemoryMap.getMemoryMap());
-		
-		System.out.println(sensor.getOrientation());
+		// if we're sitting on the first parcel, remove it.
+		if (parcels.size() > 0 && sensor.getCoordinate().equals(parcels.get(0))) {
+			parcels.remove(0);
+		}
 
-		// the target is for now, (2,3)
-		
-		ArrayList<Coordinate> parcels = MemoryMap.getMemoryMap().getParcels();
-		
-		if (parcels != null && parcels.size() == 0) {
-			System.out.println("TargetStrategy.java - decideMove(): No parcels in MemoryMap.");
+		if (parcels.size() == 0) {
+			System.out.println("TargetStrategy.java - decideMove(): all parcels eaten.");
 			return CarMove.BRAKE;
 		}
-		
+
+				
+		// get the first parcel
 		Coordinate firstParcel = parcels.get(0);
+
+		
+		// create a new graph at every move
+		Graph g = new Graph(MemoryMap.getMemoryMap());
 		
 		System.out.println(MemoryMap.getMemoryMap().getCoordinateRecord(firstParcel).getMapTile());
 		
 		List<Coordinate> path = g.BFS(sensor.getCoordinate(),firstParcel);
-		CarMove res = getNextMove(path,sensor.getOrientation());
-		System.out.println(res);
-		return res;
-
+		
+		return getNextMove(path,sensor.getOrientation());
+		
 	}
 	
 	

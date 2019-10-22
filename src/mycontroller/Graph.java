@@ -2,6 +2,7 @@ package mycontroller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -65,6 +66,12 @@ public class Graph {
 			// get each key-value pair in the memory map
 			CoordinateRecord cr = m.getCoordinateRecord(c);
 			
+			// check that the tile is reachable
+			
+			if (!cr.canWalkThrough()) {
+				continue;
+			}
+			
 			// create a new node u from it
 			Node u = new Node(c,cr);
 			
@@ -79,12 +86,11 @@ public class Graph {
 				// if a possible neighbour is indeed in the memory map:
 				CoordinateRecord testCR = m.getCoordinateRecord(possibleNeighbour);
 				
-				if (testCR != null) {
+				if (testCR != null && testCR.canWalkThrough()) {
 				
 					Node v = new Node(possibleNeighbour,testCR);
 					
 					addEdge(u,v);
-					
 					
 				}
 				
@@ -104,18 +110,18 @@ public class Graph {
 	
 	// implemented from CLRS pseudocode
 	
-	public void BFS() {
+	public void BFS(Coordinate sourceCoordinate) {
 
+		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
+		CoordinateRecord pretendDest = MemoryMap.getMemoryMap().getCoordinateRecord(new Coordinate(2,3));
 		
-		ArrayList<Node> possibleSources = new ArrayList<Node>(adj.keySet());
-		
-		if (possibleSources.size() < 3) {
+		if (sourceCR == null) {
+			System.out.println("Source coordinate not in memory map");
 			return;
 		}
 		
-		Node source = possibleSources.get(0);
+		Node source = new Node(sourceCoordinate,sourceCR);
 		
-				
 		HashMap<Node,String> color = new HashMap<Node,String>();
 		HashMap<Node,Node> pred = new HashMap<Node,Node>();
 		HashMap<Node,Integer> dist = new HashMap<Node,Integer>();
@@ -145,22 +151,20 @@ public class Graph {
 			 Integer distU = dist.get(u);
 			 
 			 ArrayList<Node> neighbours = adj.get(u);
-
 			 
 			 if (neighbours == null) {
 				 continue;
 			 }
-					 
+
 			 for (Node v : neighbours) {
 				 
 				 // check if it's unvisited
 				 if (color.get(v) == "white") {
-					 
+	 
 					 
 					 color.put(v,"black");
 					 dist.put(v,distU+1);
 					 pred.put(v,u);
-					 
 					 queue.add(v);
 				 
 				 }
@@ -170,11 +174,35 @@ public class Graph {
 			 
 		 }
 		 
-		 System.out.println(Arrays.asList(pred));
+		 
+		 if (pretendDest != null) {
+			 predToPath(new Node(new Coordinate(2,3),pretendDest),pred);
+		 }
 		 
 		
 	}
 	
 	
+	public void predToPath(Node dest, HashMap<Node,Node> pred) {
+		
+		ArrayList<Node> path = new ArrayList<Node>();
+		
+		Node p = pred.get(dest);
+		
+		while (p != null) {
+			path.add(p);
+			p = pred.get(p);
+		}
+		
+		
+		Collections.reverse(path);
+		
+		if (path.size() > 0) {
+			path.add(dest);
+		}
+		
+		System.out.println(path);
+		
+	}
 	
 }

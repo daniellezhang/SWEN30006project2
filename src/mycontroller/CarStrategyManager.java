@@ -22,13 +22,41 @@ public class CarStrategyManager extends CompositeCarStrategy {
 	@Override
 	public CarMove decideMove(Sensor sensor) {
 		
-		if (MemoryMap.getMemoryMap().getParcels().size() == sensor.getTargetParcels()) {
+		boolean seenFinishTile = (MemoryMap.getMemoryMap().getFinish().size() > 0);
+		
+		// if we've seen a parcel, do target strategy
+		if (MemoryMap.getMemoryMap().getParcels().size() > 0) {
+			
 			setCurrentStrategy("target");
+		
 		}
+		
+		// if we have enough parcels AND we've seen a finish tile, do target strategy
+		else if (sensor.enoughParcels() && seenFinishTile) {
+			
+			setCurrentStrategy("target");
+		
+		}
+		
+		// otherwise keep exploring
+		else {
+			setCurrentStrategy("explore");
+		}
+	
 
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
+		
 		CarMove move = strategy.decideMove(sensor);
+		
+		// if we're braking (no path available), just do explore.
+		
+		if (move == CarMove.BRAKE) {
+			setCurrentStrategy("explore");
+			return manager.getBaseStrategy().get(currentStrategy).decideMove(sensor);
+		}
+		
 		return move;
+		
 	}
 
 	@Override
@@ -42,5 +70,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 			manager.currentStrategy = name;
 		}
 	}
+
+
 
 }

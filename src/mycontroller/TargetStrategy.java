@@ -13,47 +13,68 @@ import world.WorldSpatial.Direction;
 public class TargetStrategy implements CarStrategy {
 
 	private ArrayList<Coordinate> parcels;
+	private ArrayList<Coordinate> finish;
+	
+	private boolean isViable;
 
 	public TargetStrategy() {
 
 		parcels = MemoryMap.getMemoryMap().getParcels();
-
+		finish = MemoryMap.getMemoryMap().getFinish();
+		
 	}
 
 	public CarMove decideMove(Sensor sensor) {
+		
+		System.out.println("TARGET");
 
 		// if we're sitting on the first parcel, remove it.
 		if (parcels.size() > 0 && sensor.getCoordinate().equals(parcels.get(0))) {
 			parcels.remove(0);
 		}
-
-		if (parcels.size() == 0) {
-			System.out.println("TargetStrategy.java - decideMove(): all parcels eaten.");
-			return CarMove.BRAKE;
-		}
-
-				
-		// get the first parcel
-		Coordinate firstParcel = parcels.get(0);
-
 		
 		// create a new graph at every move
 		Graph g = new Graph(MemoryMap.getMemoryMap());
-		
-		System.out.println(MemoryMap.getMemoryMap().getCoordinateRecord(firstParcel).getMapTile());
-		
+
+		if (parcels.size() == 0) {
+			
+			// this is guaranteed to be > 0, as target strategy is only used
+			// when all parcels and at least 1 finish tile has been seen.
+			
+			if (finish.size() > 0) {
+				
+				Coordinate firstFinish = finish.get(0);
+				
+				List<Coordinate> path = g.BFS(sensor.getCoordinate(),firstFinish);
+				
+				return getNextMove(path,sensor.getOrientation());
+				
+			}
+			
+			// but if it fails, let user know.
+			System.out.println("TargetStrategy.java - decideMove(): all parcels eaten, no finish tile in sight.");
+			return CarMove.BRAKE;
+			
+		}
+
+		// if we still have parcels left, find them
+		Coordinate firstParcel = parcels.get(0);
+				
 		List<Coordinate> path = g.BFS(sensor.getCoordinate(),firstParcel);
 		
 		return getNextMove(path,sensor.getOrientation());
 		
 	}
 	
-	
 	public CarMove getNextMove(List<Coordinate> path,WorldSpatial.Direction direction) {
 		
 		if (path == null || path.size() < 2) {
+			System.out.println("No path available");
+			isViable = false;
 			return CarMove.BRAKE;
 		}
+		
+		isViable = true;
 		
 		Coordinate curr = path.get(0);
 		Coordinate next = path.get(1);
@@ -109,5 +130,6 @@ public class TargetStrategy implements CarStrategy {
 	public String getName() {
 		return "target";
 	}
+
 
 }

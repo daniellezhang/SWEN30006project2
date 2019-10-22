@@ -2,6 +2,7 @@ package mycontroller;
 
 import tiles.MapTile;
 import tiles.MapTile.Type;
+import tiles.ParcelTrap;
 import tiles.TrapTile;
 
 public class CoordinateRecord {
@@ -43,7 +44,7 @@ public class CoordinateRecord {
 		if (!tile.isType(Type.WALL)) {
 			
 			// if the tile is not a wall, but is a non-parcel trap tile, return false
-			if (tile instanceof TrapTile && !((TrapTile)tile).getTrap().equals("parcel")) {
+			if (tile instanceof TrapTile && !(tile instanceof ParcelTrap)) {
 				return false;
 			}
 			

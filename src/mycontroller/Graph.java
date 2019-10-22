@@ -52,9 +52,9 @@ public class Graph {
 		}
 
 	}
-	
 
-	// the graph stores coordinates from memory map
+
+	// the graph stores only coordinates we can walk through
 	public Graph(MemoryMap m) {
 
 		// create new set of adjacency lists
@@ -70,6 +70,11 @@ public class Graph {
 			// get each key-value pair in the memory map
 			CoordinateRecord cr = m.getCoordinateRecord(c);
 
+			// skip coordinates we can't walk through
+			if (!cr.canWalkThrough()) {
+				continue;
+			}
+
 			// create a new node u from it
 			Node u = new Node(c,cr);
 
@@ -84,7 +89,8 @@ public class Graph {
 				// if a possible neighbour is indeed in the memory map:
 				CoordinateRecord testCR = m.getCoordinateRecord(possibleNeighbour);
 
-				if (testCR != null) {
+				// only add edges to nodes which we can walk through
+				if (testCR != null && testCR.canWalkThrough()) {
 
 					Node v = new Node(possibleNeighbour,testCR);
 
@@ -106,7 +112,7 @@ public class Graph {
 
 	}
 
-	// implemented from CLRS pseudocode, with some modifications
+	// implemented from CLRS pseudocode
 
 	public List<Coordinate> BFS(Coordinate sourceCoordinate, Coordinate destCoordinate) {
 
@@ -153,7 +159,7 @@ public class Graph {
 			 // dequeue
 			 Node u = queue.poll();
 			 Integer distU = dist.get(u);
-			 
+
 			 ArrayList<Node> neighbours = adj.get(u);
 
 			 if (neighbours == null) {
@@ -161,12 +167,8 @@ public class Graph {
 			 }
 
 			 for (Node v : neighbours) {
-				 
-				 // if we can't walk through this neighbour, don't add it.
-				 if (!v.getCoordinateRecord().canWalkThrough()) {
-					 continue;
-				 }
-				 
+
+
 				 // check if it's unvisited
 				 if (color.get(v) == "white") {
 
@@ -189,15 +191,14 @@ public class Graph {
 
 
 	}
-	
 
 	// converts a predecessor array into a path, from source to destination:
 	// [vi,v1,...,vj] where vi is the source and vj is the dest
-	
+
 	public List<Coordinate> predToPath(Node dest, HashMap<Node,Node> pred) {
 
 		ArrayList<Node> path = new ArrayList<Node>();
-		
+
 		Node p = pred.get(dest);
 
 		while (p != null) {
@@ -207,12 +208,12 @@ public class Graph {
 
 
 		Collections.reverse(path);
-		
+
 		if (path.size() > 0) {
 			// add on the destination
 			path.add(dest);
 		}
-		
+
 		// map the list of nodes into a list of coordinates
 		List<Coordinate> pathAsCoord = path.stream()
 													.map(n -> n.getCoordinate())

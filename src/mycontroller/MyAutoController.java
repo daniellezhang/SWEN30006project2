@@ -76,10 +76,10 @@ public class MyAutoController extends CarController implements Subject{
 		}
 
 		@Override
-		public void publishEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
+		public void publishEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate) {
 		
 			for(Observer observer: this.observers) {
-				observer.respondEvent(currentView,move);
+				observer.respondEvent(currentView,move,currentCoordinate);
 			}
 		
 		}

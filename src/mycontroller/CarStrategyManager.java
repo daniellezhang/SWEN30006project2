@@ -38,14 +38,20 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		
 		}
 		// if the vehicle is on a tile that has been visited, check if it is traveling in a circle 
-		else if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).getIsVisited()) {
-			if(MoveHistory.getMoveHistory().isInLoop()) {
-				//set a target that takes the vehicle out of the circle
-				
+		else if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()) != null) {
+			if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).getIsVisited()) {
+				if(MoveHistory.getMoveHistory().isInLoop()) {
+					//set a target that takes the vehicle out of the circle
+					
+				}
+				else {
+					setCurrentStrategy("explore");
+				}
 			}
 			else {
 				setCurrentStrategy("explore");
 			}
+			
 		}
 		// otherwise keep exploring
 		else {

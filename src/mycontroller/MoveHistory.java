@@ -19,7 +19,7 @@ public class MoveHistory implements Observer{
 //	}
 	
 	@Override
-	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
+	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate) {
 		this.moves.add(move);
 	}
 	

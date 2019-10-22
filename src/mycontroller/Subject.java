@@ -9,5 +9,5 @@ import utilities.Coordinate;
 public interface Subject {
 	public abstract void addObserver(Observer observer);
 	public abstract void removeObserver(Observer observer);
-	public abstract void publishEvent(HashMap<Coordinate, MapTile> currentView, CarMove move);
+	public abstract void publishEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate);
 }

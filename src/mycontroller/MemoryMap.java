@@ -48,7 +48,7 @@ public class MemoryMap implements Observer{
 //	}
 	
 	@Override
-	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move) {
+	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate) {
 		
 		Graph g = new Graph(this);
 		g.BFS();
@@ -97,6 +97,9 @@ public class MemoryMap implements Observer{
 			}
 			
 		}
+		//mark the current coordinate as visited and reachable
+		record.get(currentCoordinate).setIsVisited(true);
+		record.get(currentCoordinate).setReachable(TileStatus.REACHABLE);
 	}
 	
 	public CoordinateRecord getCoordinateRecord(Coordinate coord) {

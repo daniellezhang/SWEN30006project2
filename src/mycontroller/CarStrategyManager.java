@@ -1,7 +1,8 @@
 package mycontroller;
-
+import java.util.HashMap;
 public class CarStrategyManager extends CompositeCarStrategy {
 	private static CarStrategyManager manager;
+	private String currentStrategy;
 	private CarStrategyManager() {
 		super("strategyManager");
 	}
@@ -9,6 +10,8 @@ public class CarStrategyManager extends CompositeCarStrategy {
 	public static CarStrategyManager getCarStrategyManager() {
 		if (manager == null) {
 			manager = new CarStrategyManager();
+			manager.addStrategy(new ExploreStrategy());
+			manager.currentStrategy = "explore";
 		}
 		return manager;
 	}
@@ -16,14 +19,21 @@ public class CarStrategyManager extends CompositeCarStrategy {
 	
 	@Override
 	public CarMove decideMove(Sensor sensor) {
-		// TODO Auto-generated method stub
-		return null;
+		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
+		CarMove move = strategy.decideMove(sensor);
+		return move;
 	}
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return super.getName();
+	}
+	
+	public void setCurrentStrategy(String name) {
+		if(manager.getBaseStrategy().get(name) != null) {
+			manager.currentStrategy = name;
+		}
 	}
 
 }

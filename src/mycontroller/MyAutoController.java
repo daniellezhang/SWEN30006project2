@@ -22,7 +22,7 @@ public class MyAutoController extends CarController implements Subject{
 		
 		public MyAutoController(Car car) {
 			super(car);
-			strategy = new ExploreStrategy();
+			strategy = CarStrategyManager.getCarStrategyManager();
 			sensor  = new Sensor(car);
 			history = new MoveHistory();
 			

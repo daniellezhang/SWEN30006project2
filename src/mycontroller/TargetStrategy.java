@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -15,16 +16,18 @@ public class TargetStrategy implements CarStrategy {
 	private ArrayList<Coordinate> parcels;
 	private ArrayList<Coordinate> finish;
 	
-	private boolean isViable;
-
+	private static int SQUARE = 2;
+	
 	public TargetStrategy() {
 
 		parcels = MemoryMap.getMemoryMap().getParcels();
 		finish = MemoryMap.getMemoryMap().getFinish();
 		
 	}
-
+	
 	public CarMove decideMove(Sensor sensor) {
+		
+		System.out.println(parcels);
 		
 		System.out.println("TARGET");
 
@@ -36,14 +39,15 @@ public class TargetStrategy implements CarStrategy {
 		// create a new graph at every move
 		Graph g = new Graph(MemoryMap.getMemoryMap());
 
-		if (parcels.size() == 0) {
+		
+		if (sensor.enoughParcels()) {
 			
 			// this is guaranteed to be > 0, as target strategy is only used
 			// when all parcels and at least 1 finish tile has been seen.
-			
+
 			if (finish.size() > 0) {
 				
-				Coordinate firstFinish = finish.get(0);
+				Coordinate firstFinish = pickClosest(sensor.getCoordinate(), finish, g);
 				
 				List<Coordinate> path = g.BFS(sensor.getCoordinate(),firstFinish);
 				
@@ -57,24 +61,25 @@ public class TargetStrategy implements CarStrategy {
 			
 		}
 
-		// if we still have parcels left, find them
-		Coordinate firstParcel = parcels.get(0);
-				
-		List<Coordinate> path = g.BFS(sensor.getCoordinate(),firstParcel);
+		// if we still have parcels left, find them (in order of closeness)
+		Coordinate closest = pickClosest(sensor.getCoordinate(),parcels,g);
+			
+		
+		List<Coordinate> path = g.BFS(sensor.getCoordinate(),closest);
 		
 		return getNextMove(path,sensor.getOrientation());
 		
 	}
+		
 	
 	public CarMove getNextMove(List<Coordinate> path,WorldSpatial.Direction direction) {
 		
 		if (path == null || path.size() < 2) {
+			System.out.println(path);
 			System.out.println("No path available");
-			isViable = false;
 			return CarMove.BRAKE;
 		}
 		
-		isViable = true;
 		
 		Coordinate curr = path.get(0);
 		Coordinate next = path.get(1);
@@ -130,6 +135,49 @@ public class TargetStrategy implements CarStrategy {
 	public String getName() {
 		return "target";
 	}
+	
+	public Coordinate pickClosest(Coordinate current, List<Coordinate> options, Graph g) {
+		
+		if (options.size() == 0) {
+			return null;
+		}
+		
+		// filter reachable targets
+		List<Coordinate> reachableOptions = options.stream()
+												.filter(x -> (g.BFS(current,x).size() > 0))
+												.collect(Collectors.toList());
+	
+		// if we have no reachable targets, simply pick the first target.
+		if (reachableOptions.size() == 0) {
+			return options.get(0);
+		}
+		
+		// otherwise, pick the closest one.
+		Coordinate closest = reachableOptions.get(0);
+		double minDist = getDistance(current,closest);
+		
+		for (Coordinate coordinate : reachableOptions) {
+			
+			double dist = getDistance(current,coordinate);
+			
+			if (dist < minDist) {
+				closest = coordinate;
+				minDist = dist;
+			}
+			
+		}
+		
+		return closest;
+		
+	}
 
+	public double getDistance(Coordinate a, Coordinate b) {
+		
+		double xdiff = Math.pow((a.x - b.x),SQUARE);
+		double ydiff = Math.pow((a.y - b.y),SQUARE);
+		
+		return Math.sqrt(xdiff + ydiff);
+		
+	}
 
 }

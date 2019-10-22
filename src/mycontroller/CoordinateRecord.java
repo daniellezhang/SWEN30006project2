@@ -55,5 +55,11 @@ public class CoordinateRecord {
 		return false;
 		
 	}
+	
+	public boolean isWall() {
+		
+		return (tile.isType(Type.WALL));
+		
+	}
 
 }

@@ -12,13 +12,10 @@ import world.WorldSpatial;
 
 public class MyAutoController extends CarController implements Subject{	
 		// How many minimum units the wall is away from the player.
-		private int wallSensitivity = 1;
-		
-		private boolean isFollowingWall = false; // This is set to true when the car starts sticking to a wall.
+
 		private MoveHistory history;
 		private Sensor sensor;
 		// Car Speed to move at
-		private final int CAR_MAX_SPEED = 1;
 		private CarStrategy strategy;
 		
 		private ArrayList<Observer> observers;

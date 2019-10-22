@@ -21,6 +21,10 @@ public class CoordinateRecord {
 		return this.isVisited;
 	}
 	
+	public void setTile(MapTile tile) {
+		this.tile = tile;
+	}
+	
 	public void setReachable(TileStatus status) {
 		this.reachable = status;
 	}

@@ -13,9 +13,13 @@ public class MemoryMap implements Observer{
 	private static MemoryMap map = null;
 	private Coordinate start;
 	private ArrayList<Coordinate> finish;
+	private ArrayList<Coordinate> parcelCoord;
+	
+	
 	private MemoryMap(){
 		record = new HashMap<Coordinate,CoordinateRecord>();
 		finish = new ArrayList<Coordinate>();
+		parcelCoord = new ArrayList<Coordinate>();
 	}
 	
 	/*getter for the singleton object*/
@@ -67,8 +71,30 @@ public class MemoryMap implements Observer{
 				if (currentView.get(key).getType() == MapTile.Type.FINISH) {
 					finish.add(key);
 				}
+				//check whether the coordinate is a parcel tile
+				if(currentView.get(key) instanceof ParcelTrap) {
+					if(!parcelCoord.contains(key)) {
+						parcelCoord.add(key);
+					}
+				}
+				//check whether the coordinate is a wall
+				if(currentView.get(key).getType() == MapTile.Type.WALL) {
+
+					record.get(key).setReachable(TileStatus.UNREACHABLE);
+				}
 			}
-			
+			else {
+				/*if this coordinate used to be a parcel tile but not anymore, 
+				 * remove it from ParcelCoord and update its tile information in record
+				 */ 
+				if(parcelCoord.contains(key)) {
+					if(!(currentView.get(key) instanceof ParcelTrap)) {
+						parcelCoord.remove(key);
+						record.get(key).setTile(currentView.get(key));
+					}
+				}
+				
+			}
 			
 		}
 	}
@@ -116,6 +142,9 @@ public class MemoryMap implements Observer{
 	
 	public ArrayList<Coordinate> getFinish(){
 		return finish;
+	}
+	public ArrayList<Coordinate> getParcels(){
+		return parcelCoord;
 	}
 
 }

@@ -50,7 +50,7 @@ public class ExploreStrategy implements CarStrategy {
 		else {
 			//the car is moving forward. check if there is wall on the left, right and ahead
 			if(sensor.getVelocity()>0) {
-				//no wall head, can accelerate. prioritise driving straight
+				//no wall head, can accelerate. 
 				if(!checkWallAhead(orientation, currentView, currentCoordinate)) {
 					possibleMove.put(CarMove.FORWARD, getNeighbourCoordinate(orientation, currentCoordinate));
 					goStraight = CarMove.FORWARD;
@@ -68,8 +68,10 @@ public class ExploreStrategy implements CarStrategy {
 					possibleMove.put(CarMove.RIGHT, getNeighbourCoordinate(right, currentCoordinate));
 				}
 			}
+			
 			//the car is moving backward. check if there is wall on the back
 			else {
+				//no wall at the back, can continue move backward
 				if(!checkWallAhead(WorldSpatial.reverseDirection(orientation),currentView,currentCoordinate)) {
 					WorldSpatial.Direction reverse = WorldSpatial.reverseDirection(orientation);
 					possibleMove.put(CarMove.BACKWARD, getNeighbourCoordinate(reverse, currentCoordinate));
@@ -77,6 +79,7 @@ public class ExploreStrategy implements CarStrategy {
 				}
 				else {
 					orientation = WorldSpatial.reverseDirection(orientation);
+					//no wall on the elft, can turn left
 					if(!checkWallAhead(WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT),
 							currentView, currentCoordinate)) {
 						WorldSpatial.Direction left = WorldSpatial.changeDirection(orientation, WorldSpatial.RelativeDirection.LEFT);
@@ -99,17 +102,20 @@ public class ExploreStrategy implements CarStrategy {
 			}
 		}
 		
-		//get a list of moves that leads to unvisited coordinate
+		//get a list of moves that leads to unvisited and reachable coordinates
 		for(CarMove move:possibleMove.keySet()) {
 			Coordinate neighbour = possibleMove.get(move);
 			CoordinateRecord neighbourRecord = MemoryMap.getMemoryMap().getCoordinateRecord(neighbour);
+			//the coordinate that the move leads to immediately hasn't been visited
 			if(neighbourRecord == null || ! neighbourRecord.getIsVisited()) {
 				unvisited.put(move,neighbour);
 				break;
 			}
+			
+			//the neighbours of the coordinate that the move leads to immediately hasn't been visited and it isn't unreachable
 			for(Coordinate nextNeighbour: MemoryMap.getMemoryMap().getNeighbour(neighbour)) {
 				neighbourRecord = MemoryMap.getMemoryMap().getCoordinateRecord(nextNeighbour) ;
-				if(neighbourRecord == null || ! neighbourRecord.getIsVisited()) {
+				if(neighbourRecord == null || (! neighbourRecord.getIsVisited() && neighbourRecord.getReachable() != TileStatus.UNREACHABLE)) {
 					unvisited.put(move,neighbour);
 					break;
 				}
@@ -122,15 +128,16 @@ public class ExploreStrategy implements CarStrategy {
 				return goStraight;
 			}
 		}
-		
+		//choose a random move that leads the vehicle to an unvisited coordinate
 		if(unvisited.size() > 0) {
 			int index = rand.nextInt(unvisited.size());
-			ArrayList<CarMove> unvisitedMove = new ArrayList(unvisited.keySet());
+			ArrayList<CarMove> unvisitedMove = new ArrayList<CarMove>(unvisited.keySet());
 			return unvisitedMove.get(index);
 		}
+		//no move leads the vehicle to an unvisited coordinate. choose a random possible move
 		else if(possibleMove.size() > 0){
 			int index = rand.nextInt(possibleMove.size());
-			ArrayList<CarMove> possibleMoveList = new ArrayList(possibleMove.keySet());
+			ArrayList<CarMove> possibleMoveList = new ArrayList<CarMove>(possibleMove.keySet());
 			return possibleMoveList.get(index);
 		}
 		return CarMove.BRAKE;

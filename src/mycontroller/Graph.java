@@ -34,6 +34,10 @@ public class Graph {
 
 	// adds a node v to the adjacency list for a node u
 	public void addEdge(Node u, Node v) {
+		
+		if (adj.get(v) == null) {
+			addNode(v);
+		}
 
 		ArrayList<Node> uEdges = adj.get(u);
 		uEdges.add(v);
@@ -185,7 +189,7 @@ public class Graph {
 
 		 }
 
-
+		 
 		 return predToPath(dest,pred);
 
 
@@ -196,10 +200,12 @@ public class Graph {
 	// [vi,v1,...,vj] where vi is the source and vj is the dest
 
 	public List<Coordinate> predToPath(Node dest, HashMap<Node,Node> pred) {
+		
 
 		ArrayList<Node> path = new ArrayList<Node>();
 
 		Node p = pred.get(dest);
+		
 
 		while (p != null) {
 			path.add(p);

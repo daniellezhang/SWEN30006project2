@@ -1,5 +1,7 @@
 package mycontroller;
 
+import java.util.Objects;
+
 import utilities.Coordinate;
 
 public class Node {
@@ -13,10 +15,11 @@ public class Node {
 		this.cr = cr;
 	}
 
+	// (2,1) and (1,32) collide, so I had to change this
 	@Override
 	public int hashCode(){
 
-		return coord.hashCode();
+		return coord.hashCode() + coord.x + coord.y;
 
 	}
 

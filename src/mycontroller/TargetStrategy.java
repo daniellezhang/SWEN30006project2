@@ -39,11 +39,9 @@ public class TargetStrategy implements CarStrategy {
 		// create a new graph at every move
 		Graph g = new Graph(MemoryMap.getMemoryMap());
 
-		
 		if (sensor.enoughParcels()) {
 			
-			// this is guaranteed to be > 0, as target strategy is only used
-			// when all parcels and at least 1 finish tile has been seen.
+			// if we have enough parcels and we have a finish tile, go!
 
 			if (finish.size() > 0) {
 				
@@ -55,17 +53,24 @@ public class TargetStrategy implements CarStrategy {
 				
 			}
 			
-			// but if it fails, let user know.
+			// if it fails, return brake to trigger
 			System.out.println("TargetStrategy.java - decideMove(): all parcels eaten, no finish tile in sight.");
 			return CarMove.BRAKE;
 			
 		}
+		
+		if (parcels.size() == 0) {
+			return CarMove.BRAKE;
+		}
 
 		// if we still have parcels left, find them (in order of closeness)
 		Coordinate closest = pickClosest(sensor.getCoordinate(),parcels,g);
-			
+					
 		
 		List<Coordinate> path = g.BFS(sensor.getCoordinate(),closest);
+	
+		
+		System.out.println(path);
 		
 		return getNextMove(path,sensor.getOrientation());
 		
@@ -74,7 +79,7 @@ public class TargetStrategy implements CarStrategy {
 	
 	public CarMove getNextMove(List<Coordinate> path,WorldSpatial.Direction direction) {
 		
-		if (path == null || path.size() < 2) {
+		if (path == null || path.size() == 0) {
 			System.out.println(path);
 			System.out.println("No path available");
 			return CarMove.BRAKE;

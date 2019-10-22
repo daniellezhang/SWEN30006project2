@@ -22,9 +22,8 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	private String name = "move_along_wall";
 
 	
-	public MoveAlongWallStrategy(String currentPosition) {
+	public MoveAlongWallStrategy() {
 		isFollowingWall = false;
-		this.currentCoordinate = new Coordinate(currentPosition);
 		rand = new Random();
 	}
 	

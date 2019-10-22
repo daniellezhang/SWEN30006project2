@@ -13,6 +13,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 			manager = new CarStrategyManager();
 			manager.addStrategy(new ExploreStrategy());
 			manager.addStrategy(new TargetStrategy());
+			manager.addStrategy(new MoveAlongWallStrategy());
 			manager.currentStrategy = "explore";
 		}
 		return manager;
@@ -41,7 +42,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		else if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()) != null) {
 			if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).getIsVisited()) {
 				if(MoveHistory.getMoveHistory().isInLoop()) {
-					//set a target that takes the vehicle out of the circle
+					setCurrentStrategy("move_along_wall");
 					
 				}
 				else {

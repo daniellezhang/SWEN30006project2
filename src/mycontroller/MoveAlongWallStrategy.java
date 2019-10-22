@@ -34,7 +34,7 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	@Override
 	public CarMove decideMove(Sensor sensor) {
 		
-		System.out.println("Hello" + sensor.getView());
+		System.out.println("move along wall: ");
 
 		//HashMap<Coordinate, MapTile> currentView, WorldSpatial.Direction orientation,String currentPosition
 		HashMap<Coordinate, MapTile> currentView = sensor.getView();
@@ -42,17 +42,16 @@ public class MoveAlongWallStrategy implements CarStrategy {
 		String currentPosition = sensor.getPosition();
 		this.currentCoordinate = new Coordinate(currentPosition);
 		if (isFollowingWall) {
-			// If wall no longer on left, turn left
 			if(!checkFollowingWall(orientation, currentView, currentCoordinate)) {
-				return CarMove.LEFT;
-			} else {
-				// If wall on left and wall straight ahead, turn right
+				return CarMove.BRAKE;
+			} 
+			else {
 				if(checkWallAhead(orientation, currentView, currentCoordinate)) {
-					return CarMove.RIGHT;
+					return CarMove.BRAKE;
 				}
 			}
 		} else {
-			// Start wall-following (with wall on left) as soon as we see a wall straight ahead
+			// Start wall-following (with wall either side) as soon as we see a wall straight ahead
 			if(checkWallAhead(orientation,currentView, currentCoordinate)) {
 				isFollowingWall = true;
 				//check whether there is wall on the left or right
@@ -70,7 +69,7 @@ public class MoveAlongWallStrategy implements CarStrategy {
 				return CarMove.BACKWARD;
 			}
 		}
-		return CarMove.FORWARD;
+		return CarMove.BRAKE;
 	}
 	
 

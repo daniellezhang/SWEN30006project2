@@ -138,6 +138,12 @@ public class ExploreStrategy implements CarStrategy {
 		else if(possibleMove.size() > 0){
 			int index = rand.nextInt(possibleMove.size());
 			ArrayList<CarMove> possibleMoveList = new ArrayList<CarMove>(possibleMove.keySet());
+			//maximise the possibility of going straight
+			if(goStraight !=null && possibleMoveList.get(index) !=goStraight) {
+				if(rand.nextBoolean()) {
+					return goStraight;
+				}
+			}
 			return possibleMoveList.get(index);
 		}
 		return CarMove.BRAKE;

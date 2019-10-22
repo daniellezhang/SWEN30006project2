@@ -52,13 +52,11 @@ public class CarStrategyManager extends CompositeCarStrategy {
 			else {
 				setCurrentStrategy("explore");
 			}
-			
 		}
 		// otherwise keep exploring
 		else {
 			setCurrentStrategy("explore");
 		}
-	
 
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
 		

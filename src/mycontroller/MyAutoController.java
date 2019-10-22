@@ -13,7 +13,7 @@ import world.WorldSpatial;
 public class MyAutoController extends CarController implements Subject{	
 		// How many minimum units the wall is away from the player.
 
-		private MoveHistory history;
+		//private MoveHistory history;
 		private Sensor sensor;
 		// Car Speed to move at
 		private CarStrategy strategy;
@@ -24,11 +24,12 @@ public class MyAutoController extends CarController implements Subject{
 			super(car);
 			strategy = CarStrategyManager.getCarStrategyManager();
 			sensor  = new Sensor(car);
-			history = new MoveHistory();
+			//history = new MoveHistory();
 			
 			this.observers = new ArrayList<Observer>();
 			
 			addObserver(MemoryMap.getMemoryMap());
+			addObserver(MoveHistory.getMoveHistory());
 			
 		}
 		

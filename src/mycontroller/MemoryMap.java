@@ -50,8 +50,7 @@ public class MemoryMap implements Observer{
 	@Override
 	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate) {
 		
-		Graph g = new Graph(this);
-		g.BFS();
+
 		
 		for(Coordinate key: currentView.keySet()) {
 			

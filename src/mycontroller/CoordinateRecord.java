@@ -1,9 +1,11 @@
 package mycontroller;
 
 import tiles.MapTile;
+import tiles.MapTile.Type;
+import tiles.TrapTile;
 
 public class CoordinateRecord {
-	
+
 	private TileStatus reachable;
 	private MapTile tile;
 	private boolean isVisited;
@@ -12,23 +14,38 @@ public class CoordinateRecord {
 		this.reachable = TileStatus.UNKNOW;
 		this.isVisited = false;
 	}
-	
+
 	public void setIsVisited(boolean isVisited) {
 		this.isVisited = isVisited;
 	}
-	
+
 	public boolean getIsVisited() {
 		return this.isVisited;
 	}
-	
+
 	public void setTile(MapTile tile) {
 		this.tile = tile;
 	}
-	
+
 	public void setReachable(TileStatus status) {
 		this.reachable = status;
 	}
 	public TileStatus getReachable() {
 		return this.reachable;
 	}
+
+	public MapTile getMapTile() {
+		return this.tile;
+	}
+
+	public boolean canWalkThrough() {
+
+		if (!tile.isType(Type.WALL) && !(tile instanceof TrapTile)) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+
 }

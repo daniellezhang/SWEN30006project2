@@ -6,19 +6,22 @@ public class CarStrategyManager extends CompositeCarStrategy {
 	private CarStrategyManager() {
 		super("strategyManager");
 	}
-	
+
 	public static CarStrategyManager getCarStrategyManager() {
 		if (manager == null) {
 			manager = new CarStrategyManager();
 			manager.addStrategy(new ExploreStrategy());
+			manager.addStrategy(new TargetStrategy());
 			manager.currentStrategy = "explore";
 		}
 		return manager;
 	}
-	
-	
+
+
 	@Override
 	public CarMove decideMove(Sensor sensor) {
+		Graph g = new Graph(MemoryMap.getMemoryMap());
+		g.BFS(sensor.getCoordinate());
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
 		CarMove move = strategy.decideMove(sensor);
 		return move;
@@ -29,7 +32,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		// TODO Auto-generated method stub
 		return super.getName();
 	}
-	
+
 	public void setCurrentStrategy(String name) {
 		if(manager.getBaseStrategy().get(name) != null) {
 			manager.currentStrategy = name;

@@ -40,10 +40,17 @@ public class CoordinateRecord {
 
 	public boolean canWalkThrough() {
 
-		if (!tile.isType(Type.WALL) && !(tile instanceof TrapTile)) {
+		if (!tile.isType(Type.WALL)) {
+			
+			// if the tile is not a wall, but is a non-parcel trap tile, return false
+			if (tile instanceof TrapTile && !((TrapTile)tile).getTrap().equals("parcel")) {
+				return false;
+			}
+			
 			return true;
 		}
 		
+		// return false for walls
 		return false;
 		
 	}

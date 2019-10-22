@@ -3,6 +3,8 @@ import java.util.HashMap;
 public class CarStrategyManager extends CompositeCarStrategy {
 	private static CarStrategyManager manager;
 	private String currentStrategy;
+	private int numMoves = 0;
+
 	private CarStrategyManager() {
 		super("strategyManager");
 	}
@@ -20,8 +22,13 @@ public class CarStrategyManager extends CompositeCarStrategy {
 
 	@Override
 	public CarMove decideMove(Sensor sensor) {
-		Graph g = new Graph(MemoryMap.getMemoryMap());
-		g.BFS(sensor.getCoordinate());
+
+		if (numMoves > 40) {
+			setCurrentStrategy("target");
+		}
+
+		numMoves += 1;
+
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
 		CarMove move = strategy.decideMove(sensor);
 		return move;

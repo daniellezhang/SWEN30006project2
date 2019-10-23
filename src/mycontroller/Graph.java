@@ -2,6 +2,7 @@ package mycontroller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,7 +18,6 @@ public class Graph {
 	/* each maptile has a corresponding list of adjacent maptile */
 
 	private HashMap<Node,ArrayList<Node>> adj; // array of adjacency lists
-
 
 	public Graph(int numTiles) {
 
@@ -194,6 +194,89 @@ public class Graph {
 
 
 
+	}
+	
+	public List<Coordinate> furtherestCoordinates(Coordinate sourceCoordinate){
+		/*doing breadth first search till no more nodes to be expanded. 
+		 * return a list of coordinates that is the path from source coordinate to the furtherest unvisited  reachable coordinate
+		 */
+		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
+		if (sourceCR == null) {
+			System.out.println("Graph.java, BFS() - Source coordinate not in memory map");
+			return null;
+		}
+		
+		Node source = new Node(sourceCoordinate,sourceCR);
+		HashMap<Node,String> color = new HashMap<Node,String>();
+		HashMap<Node,Node> pred = new HashMap<Node,Node>();
+		HashMap<Node,Integer> dist = new HashMap<Node,Integer>();
+		HashMap<Integer, ArrayList<Node>> dist2 = new HashMap<Integer, ArrayList<Node>>();
+		LinkedList<Node> queue = new LinkedList<Node>();
+		// set all nodes to unvisited (white)
+		for (Node u : adj.keySet()) {
+			color.put(u,"white");
+		}
+
+		// set the source to visited (black)
+		 color.put(source,"black");
+
+		 // predecessor is null
+		 pred.put(source,null);
+
+		 // distance is 0
+		 dist.put(source,0);
+
+		 // enqueue source
+		 queue.add(source);
+
+		 while (queue.size() != 0) {
+
+			 // dequeue
+			 Node u = queue.poll();
+			 Integer distU = dist.get(u);
+
+			 ArrayList<Node> neighbours = adj.get(u);
+
+			 if (neighbours == null) {
+				 continue;
+			 }
+
+			 for (Node v : neighbours) {
+
+
+				 // check if it's unvisited
+				 if (color.get(v) == "white") {
+
+
+					 color.put(v,"black");
+					 dist.put(v,distU+1);
+					 //put the nodes into dist2 using its distance to source as the key
+					 if(dist2.get(distU+1) == null) {
+						 dist2.put(distU, new ArrayList<Node>());
+					 }
+					 dist2.get(distU).add(v);
+					 
+					 pred.put(v,u);
+					 queue.add(v);
+
+				 }
+
+
+			 }
+
+		 }
+
+		ArrayList<Integer> distanceList = new ArrayList<Integer>(dist2.keySet());;
+		Collections.sort(distanceList,Collections.reverseOrder());
+		for(Integer distance: distanceList) {
+			for(Node n: dist2.get(distance)) {
+				if(!n.getCoordinateRecord().getIsVisited()) {
+					return predToPath(n, pred);
+				}
+			}
+		}
+		Node n = dist2.get(distanceList.get(0)).get(0);
+		return null;
 	}
 
 	// converts a predecessor array into a path, from source to destination:

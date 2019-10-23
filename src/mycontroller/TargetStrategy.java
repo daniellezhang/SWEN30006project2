@@ -36,8 +36,8 @@ public class TargetStrategy implements CarStrategy {
 			parcels.remove(0);
 		}
 		
-		// create a new graph at every move
-		Graph g = new Graph(MemoryMap.getMemoryMap());
+
+		Graph g =Graph.getGraph();
 
 		if (sensor.enoughParcels()) {
 			

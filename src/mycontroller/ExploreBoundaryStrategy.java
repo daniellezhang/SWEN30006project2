@@ -14,7 +14,7 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 		// generate a graph
 		System.out.println(getName());
 		
-		Graph g =new Graph(MemoryMap.getMemoryMap());
+		Graph g =Graph.getGraph();
 		boolean isFound = false;
 		ArrayList<Coordinate> newPath = new ArrayList<Coordinate>();
 		for(int i=0; i < path.size();i++) {

@@ -20,11 +20,19 @@ public class Graph {
 	/* each maptile has a corresponding list of adjacent maptile */
 
 	private HashMap<Node,ArrayList<Node>> adj; // array of adjacency lists
-	public Graph(int numTiles) {
-
-		adj = new HashMap<Node,ArrayList<Node>>();
+	private static Graph graph;
+	
+	public static Graph getGraph() {
+		if(graph == null) {
+			graph = new Graph();
+		}
+		graph.updateGraph();
+		return graph;
 		
+	}
 
+	private Graph() {
+		adj = new HashMap<Node,ArrayList<Node>>();
 	}
 
 	// creates an empty adjacency list for node n
@@ -61,8 +69,8 @@ public class Graph {
 
 
 	// the graph stores only coordinates we can walk through
-	public Graph(MemoryMap m) {
-
+	public void updateGraph() {
+		MemoryMap m = MemoryMap.getMemoryMap();
 		// create new set of adjacency lists
 		adj = new HashMap<Node,ArrayList<Node>>();
 

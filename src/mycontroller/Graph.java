@@ -302,13 +302,16 @@ public class Graph {
 		for(Coordinate neighbour:MemoryMap.getMemoryMap().getNeighbour(coord)) {
 			CoordinateRecord neighbourRecord = MemoryMap.getMemoryMap().getCoordinateRecord(neighbour);
 			if(neighbourRecord == null) {
-				sum += 1;
+				sum += 10;
 			}
 			else if(neighbourRecord.getReachable() == TileStatus.UNKNOW) {
-				sum+= 1;
+				sum+= 10;
 			}
 		}
-		return sum*10;
+		if(!MemoryMap.getMemoryMap().getCoordinateRecord(coord).getIsVisited()) {
+			sum += 30;
+		}
+		return sum;
 	}
 
 	

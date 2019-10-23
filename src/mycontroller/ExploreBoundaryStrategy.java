@@ -14,7 +14,7 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 		// generate a graph
 		System.out.println(getName());
 		
-		Graph g = Graph.getGraph();
+		Graph g =new Graph(MemoryMap.getMemoryMap());
 		boolean isFound = false;
 		ArrayList<Coordinate> newPath = new ArrayList<Coordinate>();
 		for(int i=0; i < path.size();i++) {
@@ -28,20 +28,18 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 		}
 		System.out.println(sensor.getPosition()+' '+path.toString());
 		path = newPath;
-		
-		if(path.size() <=1||target == null ||MemoryMap.getMemoryMap().getCoordinateRecord(target).getIsVisited()) {
-			path = g.furtherestCoordinates(sensor.getCoordinate());
-			target = path.get(path.size()-1);
-		}
-		//else {
-			//path = g.BFS(sensor.getCoordinate(), target);
+		System.out.println(sensor.getPosition()+' '+path.toString());
+		if(path.size() <=1||target == null ) {
+			path = g.boundaryCoordinates(sensor.getCoordinate());
 			
-		//}
-		System.out.println(path.toString());
-		if(MemoryMap.getMemoryMap().getCoordinateRecord(target).getIsVisited()) {
-			return CarMove.BRAKE;
 		}
-		return getNextMove(path,sensor.getOrientation());
+		if(path !=null && path.size()> 1) {
+			target = path.get(path.size()-1);
+			return getNextMove(path,sensor.getOrientation());
+		}
+
+		return CarMove.BRAKE;
+		
 	}
 
 	@Override

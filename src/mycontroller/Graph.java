@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
+
 
 import utilities.Coordinate;
 
@@ -18,33 +20,54 @@ public class Graph {
 	/* each maptile has a corresponding list of adjacent maptile */
 
 	private HashMap<Node,ArrayList<Node>> adj; // array of adjacency lists
+	public Graph(int numTiles) {
 
-	private static Graph graph = null;
+		adj = new HashMap<Node,ArrayList<Node>>();
+		
 
-	/*getter for the singleton object*/
-	public static Graph getGraph() {
+	}
 
-		if (graph==null) {
-			graph = new Graph();
+	// creates an empty adjacency list for node n
+	public void addNode(Node n) {
+
+		adj.put(n,new ArrayList<Node>());
+
+	}
+
+	// adds a node v to the adjacency list for a node u
+	public void addEdge(Node u, Node v) {
+		
+		if (adj.get(v) == null) {
+			addNode(v);
 		}
 
-		return graph;
+		ArrayList<Node> uEdges = adj.get(u);
+		uEdges.add(v);
 
 	}
-	
-	public Graph() {
-		updateGraph();
+
+	// prints out the graph
+
+	public void printGraph() {
+
+
+		for (Node n: adj.keySet()) {
+
+			System.out.println("Node " + n.toString() + ": " + adj.get(n).toString());
+
+		}
+
 	}
-	
-	public void updateGraph() {
-		
-		MemoryMap m = MemoryMap.getMemoryMap();
+
+
+	// the graph stores only coordinates we can walk through
+	public Graph(MemoryMap m) {
 
 		// create new set of adjacency lists
 		adj = new HashMap<Node,ArrayList<Node>>();
 
 		for (Coordinate c : m.getCoordinates()) {
-
+			
 			// check this is a valid tile
 			if (c.x < 0 | c.y < 0) {
 				continue;
@@ -67,7 +90,7 @@ public class Graph {
 			// get possible neighbours for that node
 			ArrayList<Coordinate> possibleNeighbours = m.getNeighbour(c);
 
-
+			
 			for (Coordinate possibleNeighbour: possibleNeighbours) {
 
 				// if a possible neighbour is indeed in the memory map:
@@ -87,52 +110,18 @@ public class Graph {
 
 		}
 
-		
-	}
-	
-
-	// creates an empty adjacency list for node n
-	private void addNode(Node n) {
-
-		adj.put(n,new ArrayList<Node>());
 
 	}
 
-	// adds a node v to the adjacency list for a node u
-	private void addEdge(Node u, Node v) {
+	public boolean containsNode(Node u) {
 
-		if (adj.get(v) == null) {
-			addNode(v);
-		}
-
-		ArrayList<Node> uEdges = adj.get(u);
-		uEdges.add(v);
-		System.out.println(u.getCoordinate().toString()+": "+uEdges.toString());
+		return (adj.get(u) == null) ? false : true;
 
 	}
-
-	// prints out the graph
-
-	public void printGraph() {
-
-		updateGraph();
-		
-		for (Node n: adj.keySet()) {
-
-			System.out.println("Node " + n.toString() + ": " + adj.get(n).toString());
-
-		}
-
-	}
-
-
-
 
 	// implemented from CLRS pseudocode
 
 	public List<Coordinate> BFS(Coordinate sourceCoordinate, Coordinate destCoordinate) {
-		
-		updateGraph();
 
 		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
 		CoordinateRecord destCR = MemoryMap.getMemoryMap().getCoordinateRecord(destCoordinate);
@@ -185,10 +174,10 @@ public class Graph {
 			 }
 
 			 for (Node v : neighbours) {
-				 if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
+				 /*if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
 						System.out.println("BFS*******ERROR*********"+u.getCoordinate().toString());
 						System.out.println(neighbours.toString());
-					}
+					}*/
 
 				 // check if it's unvisited
 				 if (color.get(v) == "white") {
@@ -206,18 +195,15 @@ public class Graph {
 
 		 }
 
-
+		 
 		 return predToPath(dest,pred);
 
 
 
 	}
-
-	public List<Coordinate> furtherestCoordinates(Coordinate sourceCoordinate){
-		
-		updateGraph();
-		
-		/*doing breadth first search till no more nodes to be expanded.
+	
+	public List<Coordinate> boundaryCoordinates(Coordinate sourceCoordinate){
+		/*doing breadth first search till no more nodes to be expanded. 
 		 * return a list of coordinates that is the path from source coordinate to the furtherest unvisited  reachable coordinate
 		 */
 		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
@@ -225,12 +211,12 @@ public class Graph {
 			System.out.println("Graph.java, BFS() - Source coordinate not in memory map");
 			return null;
 		}
-
+		
 		Node source = new Node(sourceCoordinate,sourceCR);
 		HashMap<Node,String> color = new HashMap<Node,String>();
 		HashMap<Node,Node> pred = new HashMap<Node,Node>();
 		HashMap<Node,Integer> dist = new HashMap<Node,Integer>();
-		HashMap<Integer, ArrayList<Node>> dist2 = new HashMap<Integer, ArrayList<Node>>();
+		HashMap<Integer, ArrayList<Node>> heuristicMap = new HashMap<Integer, ArrayList<Node>>();
 		LinkedList<Node> queue = new LinkedList<Node>();
 		// set all nodes to unvisited (white)
 		for (Node u : adj.keySet()) {
@@ -262,11 +248,10 @@ public class Graph {
 			 }
 
 			 for (Node v : neighbours) {
-				if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
+				/*if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
 					System.out.println("furtherest COORD*******ERROR*********"+u.getCoordinate().toString());
 					System.out.println(neighbours.toString());
-				}
-
+				}*/
 
 				 // check if it's unvisited
 				 if (color.get(v) == "white") {
@@ -274,12 +259,14 @@ public class Graph {
 
 					 color.put(v,"black");
 					 dist.put(v,distU+1);
+					 int evaluation = explorableHeuristic(v.getCoordinate())+distU;
 					 //put the nodes into dist2 using its distance to source as the key
-					 if(dist2.get(distU+1) == null) {
-						 dist2.put(distU, new ArrayList<Node>());
+					 if(heuristicMap.get(evaluation) == null) {
+						 
+						 heuristicMap.put(evaluation, new ArrayList<Node>());
 					 }
-					 dist2.get(distU).add(v);
-
+					 heuristicMap.get(evaluation).add(v);
+					 
 					 pred.put(v,u);
 					 queue.add(v);
 
@@ -290,33 +277,56 @@ public class Graph {
 
 		 }
 
-		ArrayList<Integer> distanceList = new ArrayList<Integer>(dist2.keySet());;
+		ArrayList<Integer> distanceList = new ArrayList<Integer>(heuristicMap.keySet());;
 		Collections.sort(distanceList,Collections.reverseOrder());
+		ArrayList<Node> candidates = new ArrayList<Node>();
 		for(Integer distance: distanceList) {
-			for(Node n: dist2.get(distance)) {
-				if(!n.getCoordinateRecord().getIsVisited()) {
-					return predToPath(n, pred);
-				}
+			for(Node n: heuristicMap.get(distance)) {
+				candidates.add(n);
 			}
 		}
-		Node n = dist2.get(distanceList.get(0)).get(0);
+		System.out.println(candidates.toString());
+		if(candidates.size() > 0) {
+			Random rand = new Random();
+			int index = rand.nextInt(candidates.size());
+			
+			Node n = candidates.get(index);
+			return predToPath(n, pred);
+		}
+
 		return null;
 	}
+	//an evaluation function that use the number neighbours of the given coordinates haven't detected
+	public int explorableHeuristic(Coordinate coord) {
+		int sum = 0;
+		for(Coordinate neighbour:MemoryMap.getMemoryMap().getNeighbour(coord)) {
+			CoordinateRecord neighbourRecord = MemoryMap.getMemoryMap().getCoordinateRecord(neighbour);
+			if(neighbourRecord == null) {
+				sum += 10;
+			}
+			else if(neighbourRecord.getReachable() == TileStatus.UNKNOW) {
+				sum+= 10;
+			}
+		}
+		if(!MemoryMap.getMemoryMap().getCoordinateRecord(coord).getIsVisited()) {
+			sum += 30;
+		}
+		return sum;
+	}
 
-
-
+	
 	public List<Coordinate> predToPath(Node dest, HashMap<Node,Node> pred) {
-
+		
 
 		ArrayList<Node> path = new ArrayList<Node>();
 
 		Node p = pred.get(dest);
-
+		
 
 		while (p != null) {
 			path.add(p);
 			p = pred.get(p);
-
+			
 		}
 
 

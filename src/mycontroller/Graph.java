@@ -19,54 +19,32 @@ public class Graph {
 
 	private HashMap<Node,ArrayList<Node>> adj; // array of adjacency lists
 
-	public Graph(int numTiles) {
+	private static Graph graph = null;
 
-		adj = new HashMap<Node,ArrayList<Node>>();
+	/*getter for the singleton object*/
+	public static Graph getGraph() {
+
+		if (graph==null) {
+			graph = new Graph();
+		}
+
+		return graph;
 
 	}
-
-	// creates an empty adjacency list for node n
-	public void addNode(Node n) {
-
-		adj.put(n,new ArrayList<Node>());
-
+	
+	public Graph() {
+		updateGraph();
 	}
-
-	// adds a node v to the adjacency list for a node u
-	public void addEdge(Node u, Node v) {
+	
+	public void updateGraph() {
 		
-		if (adj.get(v) == null) {
-			addNode(v);
-		}
-
-		ArrayList<Node> uEdges = adj.get(u);
-		uEdges.add(v);
-		System.out.println(u.getCoordinate().toString()+": "+uEdges.toString());
-
-	}
-
-	// prints out the graph
-
-	public void printGraph() {
-
-
-		for (Node n: adj.keySet()) {
-
-			System.out.println("Node " + n.toString() + ": " + adj.get(n).toString());
-
-		}
-
-	}
-
-
-	// the graph stores only coordinates we can walk through
-	public Graph(MemoryMap m) {
+		MemoryMap m = MemoryMap.getMemoryMap();
 
 		// create new set of adjacency lists
 		adj = new HashMap<Node,ArrayList<Node>>();
 
 		for (Coordinate c : m.getCoordinates()) {
-			
+
 			// check this is a valid tile
 			if (c.x < 0 | c.y < 0) {
 				continue;
@@ -89,7 +67,7 @@ public class Graph {
 			// get possible neighbours for that node
 			ArrayList<Coordinate> possibleNeighbours = m.getNeighbour(c);
 
-			
+
 			for (Coordinate possibleNeighbour: possibleNeighbours) {
 
 				// if a possible neighbour is indeed in the memory map:
@@ -109,18 +87,52 @@ public class Graph {
 
 		}
 
+		
+	}
+	
+
+	// creates an empty adjacency list for node n
+	private void addNode(Node n) {
+
+		adj.put(n,new ArrayList<Node>());
 
 	}
 
-	public boolean containsNode(Node u) {
+	// adds a node v to the adjacency list for a node u
+	private void addEdge(Node u, Node v) {
 
-		return (adj.get(u) == null) ? false : true;
+		if (adj.get(v) == null) {
+			addNode(v);
+		}
+
+		ArrayList<Node> uEdges = adj.get(u);
+		uEdges.add(v);
+		System.out.println(u.getCoordinate().toString()+": "+uEdges.toString());
 
 	}
+
+	// prints out the graph
+
+	public void printGraph() {
+
+		updateGraph();
+		
+		for (Node n: adj.keySet()) {
+
+			System.out.println("Node " + n.toString() + ": " + adj.get(n).toString());
+
+		}
+
+	}
+
+
+
 
 	// implemented from CLRS pseudocode
 
 	public List<Coordinate> BFS(Coordinate sourceCoordinate, Coordinate destCoordinate) {
+		
+		updateGraph();
 
 		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
 		CoordinateRecord destCR = MemoryMap.getMemoryMap().getCoordinateRecord(destCoordinate);
@@ -194,15 +206,18 @@ public class Graph {
 
 		 }
 
-		 
+
 		 return predToPath(dest,pred);
 
 
 
 	}
-	
+
 	public List<Coordinate> furtherestCoordinates(Coordinate sourceCoordinate){
-		/*doing breadth first search till no more nodes to be expanded. 
+		
+		updateGraph();
+		
+		/*doing breadth first search till no more nodes to be expanded.
 		 * return a list of coordinates that is the path from source coordinate to the furtherest unvisited  reachable coordinate
 		 */
 		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
@@ -210,7 +225,7 @@ public class Graph {
 			System.out.println("Graph.java, BFS() - Source coordinate not in memory map");
 			return null;
 		}
-		
+
 		Node source = new Node(sourceCoordinate,sourceCR);
 		HashMap<Node,String> color = new HashMap<Node,String>();
 		HashMap<Node,Node> pred = new HashMap<Node,Node>();
@@ -264,7 +279,7 @@ public class Graph {
 						 dist2.put(distU, new ArrayList<Node>());
 					 }
 					 dist2.get(distU).add(v);
-					 
+
 					 pred.put(v,u);
 					 queue.add(v);
 
@@ -289,19 +304,19 @@ public class Graph {
 	}
 
 
-	
+
 	public List<Coordinate> predToPath(Node dest, HashMap<Node,Node> pred) {
-		
+
 
 		ArrayList<Node> path = new ArrayList<Node>();
 
 		Node p = pred.get(dest);
-		
+
 
 		while (p != null) {
 			path.add(p);
 			p = pred.get(p);
-			
+
 		}
 
 

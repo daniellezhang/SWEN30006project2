@@ -64,7 +64,34 @@ public class MoveHistory implements Observer{
 			i-=1;
 		}
 		
+		return 
+				false;
+	}
+	public boolean isBackAndForward() {
+		int i = moves.size()-1, nReverse = 0;
+		CarMove direction = null;
+		while(i>=0) {
+			CarMove currentMove = moves.get(i);
+			if(direction == null && (currentMove == CarMove.FORWARD || currentMove == CarMove.BACKWARD)) {
+				direction = currentMove;
+				nReverse += 1;
+			}
+			else if(direction != null && (currentMove == CarMove.FORWARD || currentMove == CarMove.BACKWARD)) {
+				if(currentMove!=direction) {
+					direction = currentMove;
+					nReverse += 1;
+				}
+				else {
+					return false;
+				}
+			}
+			/*the vehicle has made 7 consecutive turns that are the same. it is moving in a loop */
+			if(nReverse == 4) {
+				return true;
+			}
+			i-=1;
+		}
+		
 		return false;
 	}
-
 }

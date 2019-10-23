@@ -23,6 +23,7 @@ public class MyAutoController extends CarController implements Subject{
 		public MyAutoController(Car car) {
 			super(car);
 			strategy = CarStrategyManager.getCarStrategyManager();
+			//strategy = new ExploreBoundaryStrategy();
 			sensor  = new Sensor(car);
 			//history = new MoveHistory();
 			
@@ -39,7 +40,7 @@ public class MyAutoController extends CarController implements Subject{
 		public void update() {
 			// Gets what the car can see
 			HashMap<Coordinate, MapTile> currentView = sensor.getView();
-			
+			publishEvent(currentView,null,sensor.getCoordinate());
 			CarMove move = strategy.decideMove(sensor);
 			//MemoryMap.getMemoryMap().updateMap(currentView);
 			//history.addMove(move);

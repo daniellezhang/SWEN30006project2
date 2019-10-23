@@ -13,19 +13,34 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 	public CarMove decideMove(Sensor sensor) {
 		// generate a graph
 		System.out.println(getName());
-		System.out.println(path.toString());
+		
 		Graph g = new Graph(MemoryMap.getMemoryMap());
-		if(path.size() != 0) {
-			path = g.BFS(sensor.getCoordinate(), target);
-		}
-		else {
-			path = g.furtherestCoordinates(sensor.getCoordinate());
-			if(path != null && path.size()>0) {
-				target = path.get(path.size()-1);
+		boolean isFound = false;
+		ArrayList<Coordinate> newPath = new ArrayList<Coordinate>();
+		for(int i=0; i < path.size();i++) {
+			if(isFound == true) {
+				newPath.add(path.get(i));
 			}
-			
+			if(path.get(i).equals(sensor.getCoordinate())) {
+				isFound = true;
+				newPath.add(path.get(i));
+			}
 		}
-
+		System.out.println(sensor.getPosition()+' '+path.toString());
+		path = newPath;
+		
+		if(path.size() <=1||target == null ||MemoryMap.getMemoryMap().getCoordinateRecord(target).getIsVisited()) {
+			path = g.furtherestCoordinates(sensor.getCoordinate());
+			target = path.get(path.size()-1);
+		}
+		//else {
+			//path = g.BFS(sensor.getCoordinate(), target);
+			
+		//}
+		System.out.println(path.toString());
+		if(MemoryMap.getMemoryMap().getCoordinateRecord(target).getIsVisited()) {
+			return CarMove.BRAKE;
+		}
 		return getNextMove(path,sensor.getOrientation());
 	}
 

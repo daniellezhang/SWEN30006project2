@@ -41,6 +41,7 @@ public class Graph {
 
 		ArrayList<Node> uEdges = adj.get(u);
 		uEdges.add(v);
+		System.out.println(u.getCoordinate().toString()+": "+uEdges.toString());
 
 	}
 
@@ -65,7 +66,7 @@ public class Graph {
 		adj = new HashMap<Node,ArrayList<Node>>();
 
 		for (Coordinate c : m.getCoordinates()) {
-
+			
 			// check this is a valid tile
 			if (c.x < 0 | c.y < 0) {
 				continue;
@@ -88,6 +89,7 @@ public class Graph {
 			// get possible neighbours for that node
 			ArrayList<Coordinate> possibleNeighbours = m.getNeighbour(c);
 
+			
 			for (Coordinate possibleNeighbour: possibleNeighbours) {
 
 				// if a possible neighbour is indeed in the memory map:
@@ -171,7 +173,10 @@ public class Graph {
 			 }
 
 			 for (Node v : neighbours) {
-
+				 if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
+						System.out.println("BFS*******ERROR*********"+u.getCoordinate().toString());
+						System.out.println(neighbours.toString());
+					}
 
 				 // check if it's unvisited
 				 if (color.get(v) == "white") {
@@ -242,6 +247,10 @@ public class Graph {
 			 }
 
 			 for (Node v : neighbours) {
+				if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
+					System.out.println("furtherest COORD*******ERROR*********"+u.getCoordinate().toString());
+					System.out.println(neighbours.toString());
+				}
 
 
 				 // check if it's unvisited
@@ -279,9 +288,8 @@ public class Graph {
 		return null;
 	}
 
-	// converts a predecessor array into a path, from source to destination:
-	// [vi,v1,...,vj] where vi is the source and vj is the dest
 
+	
 	public List<Coordinate> predToPath(Node dest, HashMap<Node,Node> pred) {
 		
 
@@ -293,6 +301,7 @@ public class Graph {
 		while (p != null) {
 			path.add(p);
 			p = pred.get(p);
+			
 		}
 
 

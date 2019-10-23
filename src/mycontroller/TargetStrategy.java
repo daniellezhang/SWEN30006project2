@@ -26,7 +26,7 @@ public class TargetStrategy implements CarStrategy {
 	}
 	
 	public CarMove decideMove(Sensor sensor) {
-		
+		parcels = MemoryMap.getMemoryMap().getParcels();
 		System.out.println(parcels);
 		
 		System.out.println("TARGET");

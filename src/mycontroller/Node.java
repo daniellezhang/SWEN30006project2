@@ -19,7 +19,7 @@ public class Node {
 	@Override
 	public int hashCode(){
 
-		return coord.hashCode() + coord.x + coord.y;
+		return coord.toString().hashCode();
 
 	}
 

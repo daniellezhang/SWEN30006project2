@@ -56,7 +56,9 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		}
 		// otherwise keep exploring
 		else {
-			setCurrentStrategy("explore_boundary");
+			if(currentStrategy != "explore") {
+			setCurrentStrategy("explore");
+			}
 		}
 
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
@@ -66,7 +68,13 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		// if we're braking (no path available), just do explore.
 		
 		if (move == CarMove.BRAKE) {
-			setCurrentStrategy("explore");
+			if(currentStrategy == "target") {
+				setCurrentStrategy("explore_boundary");
+			}
+			else {
+				setCurrentStrategy("explore");
+			}
+
 			return manager.getBaseStrategy().get(currentStrategy).decideMove(sensor);
 		}
 		

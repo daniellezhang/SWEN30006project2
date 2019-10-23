@@ -29,6 +29,7 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 		System.out.println(sensor.getPosition()+' '+path.toString());
 		path = newPath;
 		System.out.println(sensor.getPosition()+' '+path.toString());
+
 		if(path.size() <=1||target == null ) {
 			path = g.boundaryCoordinates(sensor.getCoordinate());
 			

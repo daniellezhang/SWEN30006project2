@@ -33,16 +33,21 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		
 		}
 		
-		// if we have enough parcels AND we've seen a finish tile, do target strategy
-		else if (sensor.enoughParcels() && seenFinishTile) {
-			
-			setCurrentStrategy("target");
+		
+		else if (sensor.enoughParcels()) {
+			// if we have enough parcels AND we've seen a finish tile, do target strategy
+			if(seenFinishTile) {
+				setCurrentStrategy("target");
+			}
+			else {
+				setCurrentStrategy("explore_boundary");
+			}
 		
 		}
 		// if the vehicle is on a tile that has been visited, check if it is traveling in a circle 
 		else if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()) != null) {
 			if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).getIsVisited()) {
-				if(MoveHistory.getMoveHistory().isInLoop()) {
+				if(MoveHistory.getMoveHistory().isInLoop()||MoveHistory.getMoveHistory().isBackAndForward()) {
 					setCurrentStrategy("explore_boundary");
 					
 				}
@@ -56,7 +61,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		}
 		// otherwise keep exploring
 		else {
-			if(currentStrategy != "explore") {
+			if(currentStrategy != "explore_boudnary") {
 			setCurrentStrategy("explore");
 			}
 		}

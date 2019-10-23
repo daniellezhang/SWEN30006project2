@@ -66,14 +66,15 @@ public class TargetStrategy implements CarStrategy {
 		// if we still have parcels left, find them (in order of closeness)
 		Coordinate closest = pickClosest(sensor.getCoordinate(),parcels,g);
 					
+		if(closest != null) {
+			List<Coordinate> path = g.BFS(sensor.getCoordinate(),closest);
+			System.out.println(path);
+			return getNextMove(path,sensor.getOrientation());
+		}
 		
-		List<Coordinate> path = g.BFS(sensor.getCoordinate(),closest);
 	
-		
-		System.out.println(path);
-		
-		return getNextMove(path,sensor.getOrientation());
-		
+		return CarMove.BRAKE;
+			
 	}
 		
 	
@@ -152,9 +153,9 @@ public class TargetStrategy implements CarStrategy {
 												.filter(x -> (g.BFS(current,x).size() > 0))
 												.collect(Collectors.toList());
 	
-		// if we have no reachable targets, simply pick the first target.
+		///no reachable target
 		if (reachableOptions.size() == 0) {
-			return options.get(0);
+			return null;
 		}
 		
 		// otherwise, pick the closest one.

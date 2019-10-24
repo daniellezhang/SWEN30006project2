@@ -43,8 +43,17 @@ public class MyAutoController extends CarController implements Subject{
 			// Notification for observers everytime when the car moves
 			Coordinate currentCoordinate = sensor.getCoordinate();
 			publishEvent(currentView,move,currentCoordinate);
-
-            // car actions according to next move
+			controlVehicle(move);
+           
+		}
+		@Override
+		public void addObserver(Observer observer) {
+			this.observers.add(observer);
+			
+		}
+		
+		public void controlVehicle(CarMove move) {
+			 // car actions according to next move
 			if (move == CarMove.LEFT) {
 				this.turnLeft();
 			}
@@ -60,11 +69,6 @@ public class MyAutoController extends CarController implements Subject{
 			else if (move==CarMove.BACKWARD) {
 				this.applyReverseAcceleration();
 			}
-		}
-		@Override
-		public void addObserver(Observer observer) {
-			this.observers.add(observer);
-			
 		}
 
 		@Override

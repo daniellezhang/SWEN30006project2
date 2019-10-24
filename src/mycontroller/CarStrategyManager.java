@@ -48,7 +48,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		else {
 			setCurrentStrategy("explore_boundary");
 		}
-
+	
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
 		
 		CarMove move = strategy.decideMove(sensor);

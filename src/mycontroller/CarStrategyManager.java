@@ -30,7 +30,7 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		if (MemoryMap.getMemoryMap().getParcels().size() > 0) {
 			
 			setCurrentStrategy("target");
-		
+			
 		}
 		
 		
@@ -44,26 +44,9 @@ public class CarStrategyManager extends CompositeCarStrategy {
 			}
 		
 		}
-		// if the vehicle is on a tile that has been visited, check if it is traveling in a circle 
-		else if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()) != null) {
-			if(MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).getIsVisited()) {
-				if(MoveHistory.getMoveHistory().isInLoop()||MoveHistory.getMoveHistory().isBackAndForward()) {
-					setCurrentStrategy("explore_boundary");
-					
-				}
-				else {
-					setCurrentStrategy("explore");
-				}
-			}
-			else {
-				setCurrentStrategy("explore");
-			}
-		}
-		// otherwise keep exploring
+
 		else {
-			if(currentStrategy != "explore_boudnary") {
-			setCurrentStrategy("explore");
-			}
+			setCurrentStrategy("explore_boundary");
 		}
 
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
@@ -73,13 +56,15 @@ public class CarStrategyManager extends CompositeCarStrategy {
 		// if we're braking (no path available), just do explore.
 		
 		if (move == CarMove.BRAKE) {
-			if(currentStrategy == "target") {
+			
+			if (manager.getBaseStrategy().get(currentStrategy).getName().equals("target")) {
 				setCurrentStrategy("explore_boundary");
 			}
+			
 			else {
 				setCurrentStrategy("explore");
 			}
-
+			
 			return manager.getBaseStrategy().get(currentStrategy).decideMove(sensor);
 		}
 		

@@ -304,6 +304,7 @@ public class Graph {
 
 		return null;
 	}
+	
 	//an evaluation function that use the number neighbours of the given coordinates haven't detected
 	public int explorableHeuristic(Coordinate coord) {
 		int sum = 0;
@@ -353,5 +354,113 @@ public class Graph {
 		return pathAsCoord;
 
 	}
+	
+
+	public Coordinate closestUnvisitedLeaf(Coordinate sourceCoordinate){
+		/*doing breadth first search till no more nodes to be expanded. 
+		 * return a list of coordinates that is the path from source coordinate to the furtherest unvisited  reachable coordinate
+		 */
+		CoordinateRecord sourceCR = MemoryMap.getMemoryMap().getCoordinateRecord(sourceCoordinate);
+		if (sourceCR == null) {
+			System.out.println("Graph.java, BFS() - Source coordinate not in memory map");
+			return null;
+		}
+		
+		Node source = new Node(sourceCoordinate,sourceCR);
+		HashMap<Node,String> color = new HashMap<Node,String>();
+		HashMap<Node,Node> pred = new HashMap<Node,Node>();
+		HashMap<Node,Integer> dist = new HashMap<Node,Integer>();
+		HashMap<Integer, ArrayList<Node>> heuristicMap = new HashMap<Integer, ArrayList<Node>>();
+		LinkedList<Node> queue = new LinkedList<Node>();
+		// set all nodes to unvisited (white)
+		for (Node u : adj.keySet()) {
+			color.put(u,"white");
+		}
+
+		// set the source to visited (black)
+		 color.put(source,"black");
+
+		 // predecessor is null
+		 pred.put(source,null);
+
+		 // distance is 0
+		 dist.put(source,0);
+
+		 // enqueue source
+		 queue.add(source);
+
+		 while (queue.size() != 0) {
+
+			 // dequeue
+			 Node u = queue.poll();
+			 Integer distU = dist.get(u);
+
+			 ArrayList<Node> neighbours = adj.get(u);
+
+			 if (neighbours == null) {
+				 continue;
+			 }
+
+			 for (Node v : neighbours) {
+
+				 // check if it's unvisited
+				 if (color.get(v) == "white") {
+					 
+					 color.put(v,"black");
+					 dist.put(v,distU+1);
+					 pred.put(v,u);
+					 queue.add(v);
+
+				 }
+
+
+			 }
+
+		 }
+		 
+		 
+		List<Node> unvisited = dist.keySet().stream()
+										.filter(x -> !x.getCoordinateRecord().getIsVisited())
+				 						.filter(x -> isLeaf(x,pred))
+				 						.collect(Collectors.toList());
+		
+		if (unvisited.size() == 0) {
+			return null;
+		}
+		
+		Node closest = unvisited.get(0);
+		
+		int minDist = dist.get(closest);
+		
+		for (Node n : unvisited) {
+			
+			int distCandidate = dist.get(n);
+			
+			if (distCandidate < minDist) {
+				closest = n;
+				minDist = distCandidate;
+			}
+			
+		}
+		
+		return closest.getCoordinate();
+
+		
+	}
+	
+	public boolean isLeaf(Node candidate, HashMap<Node,Node> pred) {
+		
+		for (Node n : pred.keySet()) {
+			
+			if (pred.get(n) != null && pred.get(n).equals(candidate)) {
+				return false;
+			}
+			
+		}
+		
+		return true;
+		
+	}
+	
 
 }

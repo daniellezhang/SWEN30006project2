@@ -1,5 +1,6 @@
 package mycontroller;
 
+
 import tiles.MapTile;
 import tiles.MapTile.Type;
 import tiles.ParcelTrap;
@@ -12,7 +13,7 @@ public class CoordinateRecord {
 	private boolean isVisited;
 	public CoordinateRecord(MapTile tile) {
 		this.tile = tile;
-		this.reachable = TileStatus.UNKNOW;
+		this.reachable = TileStatus.UNKNOWN;
 		this.isVisited = false;
 	}
 

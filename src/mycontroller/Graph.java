@@ -313,7 +313,7 @@ public class Graph {
 			if(neighbourRecord == null) {
 				sum += 10;
 			}
-			else if(neighbourRecord.getReachable() == TileStatus.UNKNOW) {
+			else if(neighbourRecord.getReachable() == TileStatus.UNKNOWN) {
 				sum+= 10;
 			}
 		}

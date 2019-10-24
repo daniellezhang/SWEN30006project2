@@ -3,6 +3,7 @@ import java.util.HashMap;
 public class CarStrategyManager extends CompositeCarStrategy {
 	private static CarStrategyManager manager;
 	private String currentStrategy;
+	
 
 	private CarStrategyManager() {
 		super("strategyManager");
@@ -24,16 +25,16 @@ public class CarStrategyManager extends CompositeCarStrategy {
 	@Override
 	public CarMove decideMove(Sensor sensor) {
 		
-		boolean seenFinishTile = (MemoryMap.getMemoryMap().getFinish().size() > 0);
 		
+		boolean seenFinishTile = (MemoryMap.getMemoryMap().getFinish().size() > 0);
+
 		// if we've seen a parcel, do target strategy
 		if (MemoryMap.getMemoryMap().getParcels().size() > 0) {
-			
+
 			setCurrentStrategy("target");
-			
+
 		}
-		
-		
+
 		else if (sensor.enoughParcels()) {
 			// if we have enough parcels AND we've seen a finish tile, do target strategy
 			if(seenFinishTile) {
@@ -42,21 +43,26 @@ public class CarStrategyManager extends CompositeCarStrategy {
 			else {
 				setCurrentStrategy("explore_boundary");
 			}
-		
+
 		}
 
 		else {
 			setCurrentStrategy("explore_boundary");
 		}
-	
+
 		CarStrategy strategy = manager.getBaseStrategy().get(currentStrategy);
-		
+
 		CarMove move = strategy.decideMove(sensor);
-		
+
 		// if we're braking (no path available), just do explore.
+
+		if (sensor.getVelocity() == 0 && (move.equals(CarMove.LEFT) || move.equals(CarMove.RIGHT))) {
+			setCurrentStrategy("explore");
+			return manager.getBaseStrategy().get(currentStrategy).decideMove(sensor);
+		}
 		
 		if (move == CarMove.BRAKE) {
-			
+
 			if (manager.getBaseStrategy().get(currentStrategy).getName().equals("target")) {
 				setCurrentStrategy("explore_boundary");
 			}
@@ -64,12 +70,15 @@ public class CarStrategyManager extends CompositeCarStrategy {
 			else {
 				setCurrentStrategy("explore");
 			}
-			
+
 			return manager.getBaseStrategy().get(currentStrategy).decideMove(sensor);
+			
 		}
 		
-		return move;
+
 		
+		return move;
+
 	}
 
 	@Override

@@ -15,8 +15,7 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 		System.out.println(this.getName());
 		
 		Graph g = Graph.getGraph();
-		
-		
+				
 		// reset target if we've gotten there
 		if (target == null || sensor.getCoordinate().equals(target)) {
 			 target = g.closestUnvisitedLeaf(sensor.getCoordinate());

@@ -83,7 +83,6 @@ public class CarStrategyManager extends CompositeCarStrategy {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return super.getName();
 	}
 

@@ -15,7 +15,7 @@ public class Node {
 		this.cr = cr;
 	}
 
-	// (2,1) and (1,32) collide, so I had to change this
+
 	@Override
 	public int hashCode(){
 

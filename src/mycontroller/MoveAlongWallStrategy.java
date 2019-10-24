@@ -15,7 +15,6 @@ public class MoveAlongWallStrategy implements CarStrategy {
 	
 	
 	// How many minimum units the wall is away from the player.
-	private int wallSensitivity = 1;
 	private boolean isFollowingWall;
 	private Coordinate currentCoordinate;
 	private Random rand;
@@ -36,7 +35,6 @@ public class MoveAlongWallStrategy implements CarStrategy {
 		
 		System.out.println("move along wall: ");
 
-		//HashMap<Coordinate, MapTile> currentView, WorldSpatial.Direction orientation,String currentPosition
 		HashMap<Coordinate, MapTile> currentView = sensor.getView();
 		WorldSpatial.Direction orientation = sensor.getOrientation();
 		String currentPosition = sensor.getPosition();

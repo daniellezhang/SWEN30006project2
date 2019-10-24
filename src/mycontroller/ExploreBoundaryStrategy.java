@@ -35,7 +35,6 @@ public class ExploreBoundaryStrategy extends TargetStrategy {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 

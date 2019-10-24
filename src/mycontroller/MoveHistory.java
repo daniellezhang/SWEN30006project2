@@ -20,9 +20,6 @@ public class MoveHistory implements Observer{
 		}
 		return moveHistory;
 	}
-//	public void addMove(CarMove m) {
-//		this.moves.add(m);
-//	}
 	
 	@Override
 	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate) {
@@ -42,7 +39,7 @@ public class MoveHistory implements Observer{
 	public boolean isInLoop() {
 		int i = moves.size()-1, nTurns = 0;
 		CarMove direction = null;
-		/*back tracking past moves to check if the vehicle is travelling in a circle*/
+		/*back tracking past moves to check if the vehicle is traveling in a circle*/
 		while(i>=0) {
 			CarMove currentMove = moves.get(i);
 			if(direction == null && (currentMove == CarMove.LEFT || currentMove == CarMove.RIGHT)) {

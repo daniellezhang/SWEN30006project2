@@ -182,11 +182,6 @@ public class Graph {
 			 }
 
 			 for (Node v : neighbours) {
-				 /*if(Math.abs(u.getCoordinate().x - v.getCoordinate().x)+Math.abs(u.getCoordinate().y - v.getCoordinate().y)>=2) {
-						System.out.println("BFS*******ERROR*********"+u.getCoordinate().toString());
-						System.out.println(neighbours.toString());
-					}*/
-
 				 // check if it's unvisited
 				 if (color.get(v) == "white") {
 

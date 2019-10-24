@@ -42,7 +42,6 @@ public class TargetStrategy implements CarStrategy {
 		if (sensor.enoughParcels()) {
 			
 			// if we have enough parcels and we have a finish tile, go!
-
 			if (finish.size() > 0) {
 				
 				Coordinate firstFinish = pickClosest(sensor.getCoordinate(), finish, g);

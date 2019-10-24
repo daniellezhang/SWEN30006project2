@@ -30,22 +30,6 @@ public class MemoryMap implements Observer{
 		return map;
 	}
 	
-//	/*update the coordinate record with the current view from the car*/
-//	public void updateMap(HashMap<Coordinate, MapTile> currentView) {
-//		
-//		for(Coordinate key: currentView.keySet()) {
-//			
-//			CoordinateRecord cr = new CoordinateRecord(currentView.get(key));
-//			
-//			//
-//			// check whether it already exists in our record
-//			//
-//			
-//			record.put(key, cr);
-//			
-//		}
-//		
-//	}
 	
 	@Override
 	public void respondEvent(HashMap<Coordinate, MapTile> currentView, CarMove move,Coordinate currentCoordinate) {
@@ -56,10 +40,7 @@ public class MemoryMap implements Observer{
 			
 			CoordinateRecord cr = new CoordinateRecord(currentView.get(key));
 			
-			//
 			// check whether it already exists in our record
-			//
-			
 			if (!record.containsKey(key)) {
 				record.put(key, cr);
 				//check whether the coordinate is a start tile

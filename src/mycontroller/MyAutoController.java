@@ -13,44 +13,38 @@ import world.WorldSpatial;
 public class MyAutoController extends CarController implements Subject{	
 		// How many minimum units the wall is away from the player.
 
-		//private MoveHistory history;
+
 		private Sensor sensor;
-		// Car Speed to move at
 		private CarStrategy strategy;
-		
 		private ArrayList<Observer> observers;
 		
 		public MyAutoController(Car car) {
 			super(car);
 			strategy = CarStrategyManager.getCarStrategyManager();
-			//strategy = new ExploreBoundaryStrategy();
 			sensor  = new Sensor(car);
-			//history = new MoveHistory();
 			
+			//add the listener into Observer list
 			this.observers = new ArrayList<Observer>();
-			
 			addObserver(MemoryMap.getMemoryMap());
 			addObserver(MoveHistory.getMoveHistory());
 			
 		}
 		
-		// Coordinate initialGuess;
-		// boolean notSouth = true;
 		@Override
 		public void update() {
 			// Gets what the car can see
 			HashMap<Coordinate, MapTile> currentView = sensor.getView();
+			
 			publishEvent(currentView,null,sensor.getCoordinate());
+			
+			// get nest move according to strategy result
 			CarMove move = strategy.decideMove(sensor);
-			//MemoryMap.getMemoryMap().updateMap(currentView);
-			//history.addMove(move);
 			System.out.println(move);
+			// Notification for observers everytime when the car moves
 			Coordinate currentCoordinate = sensor.getCoordinate();
 			publishEvent(currentView,move,currentCoordinate);
-			//the coordinate the vehicle is currently on has been visited. update it in MemoryMap
-			// MemoryMap.getMemoryMap().getCoordinateRecord(sensor.getCoordinate()).setIsVisited(true);
 
-			// checkStateChange();
+            // car actions according to next move
 			if (move == CarMove.LEFT) {
 				this.turnLeft();
 			}

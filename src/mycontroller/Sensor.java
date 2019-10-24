@@ -40,10 +40,6 @@ public class Sensor {
 		return car.getView();
 	}
 	
-	// update a memory map
-	public MemoryMap update(MemoryMap m) {
-		return null;
-	}
 	
 	public int getNumParcels() {
 		return car.numParcelsFound();
